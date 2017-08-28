@@ -16,6 +16,7 @@
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-preset-es2015": "6.24.1",
+    "concurrently": "3.5.0",
     "del": "3.0.0",
     "gulp": "3.9.1",
     "gulp-autoprefixer": "4.0.0",
@@ -39,11 +40,15 @@
     "gulp-watch": "4.3.11",
     "hapi": "16.5.2",
     "mocha": "3.5.0",
+    "nodemon": "1.11.0",
     "rethinkdb": "2.3.3",
     "run-sequence": "2.1.0"
   },
   "scripts": {
     "gulp": "gulp",
+    "start-db": "rethinkdb --config-file rethinkdb.conf",
+    "start-server": "nodemon server.js",
+    "start": "concurrently 'npm run start-db' 'npm run start-server'",
     "postinstall": "gulp build && gulp favicon",
     "test": "mocha"
   }

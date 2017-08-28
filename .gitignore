@@ -6,4 +6,4 @@
 
 assets/dist/
 node_modules/
-vendor/
+rethinkdb_data/

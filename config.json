@@ -1,0 +1,11 @@
+{
+  "hapi": {
+    "host": "localhost",
+    "port": 8000
+  },
+  "rethinkdb": {
+    "host": "localhost",
+    "port": 28015,
+    "db": "control_demo"
+  }
+}

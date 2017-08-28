@@ -1,0 +1,21 @@
+{
+
+  "colours": true,
+  "stdin": true,
+  "stdout": true,
+  "verbose": false,
+  "runOnChangeOnly": false,
+
+  "watch": [
+    "server.js"
+  ],
+
+  "ignore": [
+    ".git",
+    "assets/",
+    "node_modules/",
+    "rethinkdb_data/",
+    "test/"
+  ]
+
+}
