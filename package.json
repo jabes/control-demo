@@ -50,6 +50,6 @@
     "start-server": "nodemon server.js",
     "start": "concurrently 'npm run start-db' 'npm run start-server'",
     "postinstall": "gulp build && gulp favicon",
-    "test": "mocha"
+    "test": "mocha --reporter spec"
   }
 }
