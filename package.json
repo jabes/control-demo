@@ -49,11 +49,7 @@
     "webpack-hot-middleware": "2.18.2"
   },
   "scripts": {
-    "start": "concurrently 'npm run start-db' 'npm run start-server'",
-    "start-db": "rethinkdb --config-file rethinkdb.conf",
-    "start-server": "nodemon index.js",
-    "build": "webpack --progress --display-error-details",
-    "postinstall": "npm run build",
+    "start": "concurrently 'rethinkdb --config-file rethinkdb.conf' nodemon",
     "test": "mocha --reporter spec"
   }
 }

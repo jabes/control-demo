@@ -7,5 +7,3 @@
 
 node_modules/
 rethinkdb_data/
-
-public/bundle.js
