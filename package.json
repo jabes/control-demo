@@ -34,6 +34,7 @@
     "cssnano": "3.10.0",
     "eslint": "4.5.0",
     "eslint-loader": "1.9.0",
+    "file-loader": "0.11.2",
     "json-loader": "0.5.7",
     "mocha": "3.5.0",
     "normalize.css": "7.0.0",

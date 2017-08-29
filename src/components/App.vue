@@ -1,7 +1,5 @@
 <template>
-  <div id="app" class="app">
-    <h1>This is my app.</h1>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
@@ -13,7 +11,10 @@
     }
 </script>
 
-<style lang="stylus" scoped>
-  .app
-    color: blue
+<style lang="stylus">
+  @import "~normalize.css"
+  @import "../styles/app.styl"
+  body
+    background image-url('background.svg') no-repeat center center
+    background-size cover
 </style>

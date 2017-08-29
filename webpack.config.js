@@ -23,9 +23,9 @@ let config = {
       {test: /\.vue$/, loader: 'vue-loader'},
       {test: /\.json$/, loader: 'json-loader'},
       {
-        test: /\.(jpg|png|gif)$/i,
+        test: /\.(jpg|png|gif|svg|eot|woff|ttf)$/i,
         use: [{
-          loader: 'url-loader',
+          loader: 'url-loader', // Loads files as `base64` encoded URL
           options: {
             limit: 8192
           },
@@ -47,6 +47,7 @@ let config = {
 if (env !== 'production') {
   config.entry.push('webpack-hot-middleware/client');
   config.plugins.push(
+    // new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   );
 }

@@ -1,9 +1,8 @@
 <template>
-  <form action="/login" method="post">
-    <input type="email" name="email">
-    <input type="password" name="password">
-    <button>Login</button>
-  </form>
+  <div class="container">
+    <h1>home</h1>
+    <router-link :to="{ name: 'login' }">Login</router-link>
+  </div>
 </template>
 
 <script>
@@ -16,4 +15,6 @@
 </script>
 
 <style lang="stylus" scoped>
+  .container
+    color $color-white
 </style>

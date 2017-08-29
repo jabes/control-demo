@@ -12,6 +12,7 @@
 
   "watch": [
     "index.js",
+    "webpack.config.js",
     "modules/"
   ],
 
