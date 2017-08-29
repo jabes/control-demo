@@ -2,7 +2,7 @@ class Utils {
 
   static reloadPage(params) {
     const loc = window.location;
-    const query = vm.serialize(params);
+    const query = this.serialize(params);
     window.location.href = loc.origin + loc.pathname + '?' + query;
   }
 
@@ -236,9 +236,6 @@ class Utils {
 
 }
 
-
 if (typeof module === 'object' && module.exports) {
   module.exports = Utils;
 }
-
-// export {Utils as default}

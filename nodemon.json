@@ -6,15 +6,21 @@
   "verbose": false,
   "runOnChangeOnly": false,
 
+  "env": {
+    "NODE_ENV": "development"
+  },
+
   "watch": [
-    "server.js"
+    "index.js",
+    "modules/"
   ],
 
   "ignore": [
     ".git",
-    "assets/",
     "node_modules/",
     "rethinkdb_data/",
+    "src/",
+    "public/",
     "test/"
   ]
 

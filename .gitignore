@@ -3,7 +3,9 @@
 !.editorconfig
 !.eslintrc
 !.gitignore
+!.npmrc
 
-assets/dist/
 node_modules/
 rethinkdb_data/
+
+public/bundle.js

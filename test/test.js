@@ -3,8 +3,7 @@ const mocha = require('mocha');
 const describe = mocha.describe;
 const it = mocha.it;
 
-// import Utils from "../assets/src/scripts/classes/class.utils.js";
-const Utils = require("../assets/src/scripts/classes/class.utils.js");
+const Utils = require("../src/classes/class.utils.js");
 
 describe('Utils.serialize', () => {
 
