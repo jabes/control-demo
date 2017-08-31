@@ -7,7 +7,8 @@
   "runOnChangeOnly": false,
 
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "JWT_SECRET": "shhhh"
   },
 
   "watch": [

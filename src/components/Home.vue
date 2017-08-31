@@ -1,20 +1,16 @@
 <template>
   <div class="container">
-    <h1>home</h1>
-    <router-link :to="{ name: 'login' }">Login</router-link>
+    <h1>Home</h1>
+    <router-link :to="{ name: 'logout' }">Logout</router-link>
   </div>
 </template>
 
 <script>
-  //  export default {
-  //    components: {},
-  //    data() {
-  //      return {}
-  //    }
-  //  }
 </script>
 
 <style lang="stylus" scoped>
+  @import "../styles/variables.styl"
+
   .container
     color $color-white
 </style>

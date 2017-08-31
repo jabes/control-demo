@@ -3,14 +3,22 @@
     <div class="flex justify-center items-center height-100">
       <div class="flex-none">
         <h1>Sign-up</h1>
-        <form action="/sign-up" method="post">
+        <form v-on:submit.prevent>
           <div class="margin-bottom-200">
-            <input type="email" name="email" placeholder="Email">
-            <input type="password" name="password" placeholder="Password">
-            <input type="password" name="password_confirm" placeholder="Confirm Password">
+            <input name="username"
+                   placeholder="Username"
+                   v-model="credentials.username">
+            <input type="password"
+                   name="password"
+                   placeholder="Password"
+                   v-model="credentials.password">
+            <input type="password"
+                   name="password_confirm"
+                   placeholder="Confirm password"
+                   v-model="credentials.password_confirm">
           </div>
           <div class="vertical-middle">
-            <button class="btn primary white margin-right-100">Sign-up</button>
+            <button class="btn primary white margin-right-100" v-on:click="submit()">Sign-up</button>
             <router-link :to="{ name: 'login' }">Login</router-link>
           </div>
         </form>
@@ -20,18 +28,32 @@
 </template>
 
 <script>
-  //  export default {
-  //    components: {},
-  //    data() {
-  //      return {}
-  //    }
-  //  }
+  import Auth from '../services/auth';
+
+  export default {
+    data() {
+      return {
+        credentials: {
+          username: '',
+          password: '',
+          password_confirm: '',
+        }
+      }
+    },
+    methods: {
+      submit() {
+        Auth.signup(this.credentials, '/');
+      }
+    }
+  }
 </script>
 
 <style lang="stylus" scoped>
   @import "../styles/variables.styl"
+
   .container
     color $color-white
+
   input
     display block
     width 300px
