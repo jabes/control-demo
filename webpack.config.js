@@ -34,20 +34,22 @@ let config = {
     ],
   },
 
-  plugins: [
+  plugins: [],
+
+};
+
+if (env === 'production') {
+  config.plugins.push(
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       }
-    }),
-  ],
-
-};
-
-if (env !== 'production') {
+    })
+  );
+} else if (env === 'development') {
   config.entry.push('webpack-hot-middleware/client');
   config.plugins.push(
-    // new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   );
 }

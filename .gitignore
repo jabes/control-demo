@@ -7,3 +7,6 @@
 
 node_modules/
 rethinkdb_data/
+
+public/*
+!public/index.html

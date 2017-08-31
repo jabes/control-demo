@@ -1,15 +1,3 @@
-$colors = {
-  'inherit': inherit,
-  'transparent': transparent,
-  'black': $color-black,
-  'grey-darker': $color-grey-darker,
-  'grey-dark': $color-grey-dark,
-  'grey': $color-grey,
-  'grey-light': $color-grey-light,
-  'grey-lighter': $color-grey-lighter,
-  'white': $color-white,
-}
-
 for $key, $value in $colors
   .bg-{$key}
     background-color $value

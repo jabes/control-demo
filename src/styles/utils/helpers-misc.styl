@@ -63,3 +63,8 @@ for $value in $column-gap
   $key = remove-unit($value)
   .column-gap-{$key}
     column-gap $value
+
+for $i in 0..10
+  $value = convert-unit($i, 'px')
+  .border-radius-{$i}
+    border-radius $value

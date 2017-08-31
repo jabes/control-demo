@@ -1,0 +1,57 @@
+$btn-colors = {
+  'primary-black': {
+    'text': $colors['white'],
+    'bg': $colors['black'],
+  },
+  'primary-white': {
+    'text': $colors['black'],
+    'bg': $colors['white'],
+  },
+  'secondary-black': {
+    'text': $colors['black'],
+    'border': $colors['black'],
+  },
+  'secondary-white': {
+    'text': $colors['white'],
+    'border': $colors['white'],
+  },
+}
+
+.btn
+  display inline-block
+  padding-top .75rem
+  padding-bottom .75rem
+  padding-left 1rem
+  padding-right 1rem
+  border none
+  border-radius 3px
+  font-weight bold
+  text-align center
+  text-decoration none
+  text-transform uppercase
+  color inherit
+  background none
+  user-select none
+  cursor pointer
+  &:active
+    transform translateY(1px)
+  &:focus
+    $color = $colors['black']
+    box-shadow 0 0 4px 1px rgba($color, .5)
+    outline none
+  &[disabled]
+    pointer-events none
+    opacity .2
+  for $key, $value in $btn-colors
+    $color-text = $value['text']
+    $color-bg = $value['bg']
+    $color-border = $value['border']
+    &.{$key}
+      if $color-text
+        color $color-text
+      if $color-bg
+        background $color-bg
+      if $color-border
+        border 2px solid $color-border
+      &:not(:hover)
+        opacity .8

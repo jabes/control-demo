@@ -24,18 +24,18 @@ export default {
     localStorage.removeItem('access_token');
   },
 
-  handleAuthSuccess(response, redirect) {
+  handleAuthSuccess(context, response, redirect) {
     if (response.body.authenticated) {
       this.setToken(response.body.access_token);
       this.user.authenticated = true;
+      context.error = false;
       // store.commit('login');
       if (redirect) router.push(redirect);
     }
   },
 
-  handleAuthFailure(response) {
-    console.error(response.status);
-    console.error(response.statusText);
+  handleAuthFailure(context, response) {
+    if (response.body.error) context.error = response.body.message;
     this.logout();
   },
 
@@ -45,36 +45,36 @@ export default {
     // store.commit('logout');
   },
 
-  login(credentials, redirect) {
+  login(context, credentials, redirect) {
     return app.$http.post(LOGIN_URL, credentials)
       .then(
         response => {
-          this.handleAuthSuccess(response, redirect);
+          this.handleAuthSuccess(context, response, redirect);
         },
         response => {
-          this.handleAuthFailure(response);
+          this.handleAuthFailure(context, response);
         }
       )
       .catch(
         error => {
-          this.handleAuthFailure(error);
+          this.handleAuthFailure(context, error);
         }
       );
   },
 
-  signup(credentials, redirect) {
+  signup(context, credentials, redirect) {
     return app.$http.post(SIGNUP_URL, credentials)
       .then(
         response => {
-          this.handleAuthSuccess(response, redirect);
+          this.handleAuthSuccess(context, response, redirect);
         },
         response => {
-          this.handleAuthFailure(response);
+          this.handleAuthFailure(context, response);
         }
       )
       .catch(
         error => {
-          this.handleAuthFailure(error);
+          this.handleAuthFailure(context, error);
         }
       );
   },

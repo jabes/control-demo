@@ -13,8 +13,6 @@ html
   box-sizing inherit
 
 body
-  background-color $color-white
-  color $color-grey-darker
   font-family $font-family-roboto
 
 h1, h2, h3, h4, h5, h6
@@ -56,64 +54,6 @@ a
 
 img
   user-select none
-
-.btn
-  display inline-block
-  padding-top .75rem
-  padding-bottom .75rem
-  padding-left 1rem
-  padding-right 1rem
-  border none
-  border-radius 3px
-  font-weight bold
-  text-align center
-  text-decoration none
-  text-transform uppercase
-  color inherit
-  background none
-  user-select none
-  cursor pointer
-  &:active
-    transform translateY(1px)
-  &.primary,
-  &.secondary
-    &:focus
-      box-shadow 0 0 4px 1px rgba($color-black, .5)
-      outline none
-  &.primary
-    &[disabled]
-      color $color-grey !important
-      background $color-grey-lighter !important
-      pointer-events none
-    &.black
-      color $color-white
-      background $color-black
-      &:hover
-        color $color-white
-        background $color-grey
-    &.white
-      color $color-grey
-      background $color-white
-      &:hover
-        color $color-black
-        background $color-white
-  &.secondary
-    &[disabled]
-      color $color-grey-light !important
-      border-color $color-grey-light !important
-      pointer-events none
-    &.black
-      color $color-black
-      border 2px solid $color-black
-      &:hover
-        color $color-white
-        background $color-black
-    &.white
-      color $color-white
-      border 2px solid $color-white
-      &:hover
-        color $color-black
-        background $color-white
 
 .svg-container
   display block
