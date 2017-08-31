@@ -4,19 +4,32 @@
       <div class="flex-none">
         <h1>Sign-up</h1>
         <form v-on:submit.prevent>
-          <p v-if="error" class="width-100">{{ error }}</p>
+          <p class="block color-red-light"
+             v-if="error">{{ error }}</p>
           <div class="margin-bottom-200">
-            <input name="username"
-                   placeholder="Username"
-                   v-model="credentials.username">
-            <input type="password"
-                   name="password"
-                   placeholder="Password"
-                   v-model="credentials.password">
-            <input type="password"
-                   name="password_confirm"
-                   placeholder="Confirm password"
-                   v-model="credentials.password_confirm">
+            <p>
+              <input name="username"
+                     placeholder="Username"
+                     v-model="credentials.username">
+              <span class="block margin-top-50 color-red-light"
+                    v-if="errors.username">{{ errors.username }}</span>
+            </p>
+            <p>
+              <input type="password"
+                     name="password"
+                     placeholder="Password"
+                     v-model="credentials.password">
+              <span class="block margin-top-50 color-red-light"
+                    v-if="errors.password">{{ errors.password }}</span>
+            </p>
+            <p>
+              <input type="password"
+                     name="password_confirm"
+                     placeholder="Confirm password"
+                     v-model="credentials.password_confirm">
+              <span class="block margin-top-50 color-red-light"
+                    v-if="errors.password_confirm">{{ errors.password_confirm }}</span>
+            </p>
           </div>
           <div class="vertical-middle">
             <button class="btn secondary-white margin-right-100" v-on:click="submit()">Sign-up</button>
@@ -39,7 +52,12 @@
           password: '',
           password_confirm: '',
         },
-        error: ''
+        error: '',
+        errors: {
+          username: '',
+          password: '',
+          password_confirm: '',
+        },
       }
     },
     methods: {
@@ -61,8 +79,8 @@
     $color-bg = $colors['white']
     display block
     width 100%
+    margin 0
     padding 1em
-    margin 20px 0
     border-radius 5px
     font-size 18px
     color $color-text

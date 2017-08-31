@@ -1,9 +1,15 @@
 'use strict';
 
 const Joi = require('joi');
+const Relish = require('relish');
 const Auth = require('./auth');
 const User = require('./user');
 const webpackConfig = require('../webpack.config');
+
+const relish = Relish({
+  stripQuotes: true,
+  messages: {},
+});
 
 module.exports = [
 
@@ -30,6 +36,10 @@ module.exports = [
     path: '/sessions/check',
     config: {
       validate: {
+        failAction: relish.failAction,
+        options: {
+          abortEarly: false,
+        },
         payload: {
           id: Joi.string().required(),
         }
@@ -49,6 +59,10 @@ module.exports = [
     path: '/users/login',
     config: {
       validate: {
+        failAction: relish.failAction,
+        options: {
+          abortEarly: false,
+        },
         payload: {
           username: Joi.string().min(3).max(30).alphanum().required(),
           password: Joi.string().min(3).max(30).required(),
@@ -76,6 +90,10 @@ module.exports = [
     path: '/users/create',
     config: {
       validate: {
+        failAction: relish.failAction,
+        options: {
+          abortEarly: false,
+        },
         payload: {
           username: Joi.string().min(3).max(30).alphanum().required(),
           password: Joi.string().min(3).max(30).required(),

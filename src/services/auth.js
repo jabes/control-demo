@@ -24,25 +24,60 @@ export default {
     localStorage.removeItem('access_token');
   },
 
+  setError(context, error = '') {
+    context.error = error;
+  },
+
+  clearError(context) {
+    context.error = null;
+  },
+
+  setErrors(context, errors = []) {
+    if (!errors) return;
+    for (let error of errors) {
+      let key = error['key'];
+      let msg = error['message'];
+      let constraint = error['constraint'];
+      let bail = context.errors.hasOwnProperty(key);
+      if (bail) continue;
+      switch (constraint) {
+        case 'empty':
+          msg = 'not allowed to be empty';
+          break;
+        case 'allowOnly':
+          if (key === 'password_confirm') msg = 'passwords must match';
+          break;
+      }
+      context.errors[key] = msg;
+    }
+  },
+
+  clearErrors(context) {
+    context.errors = {};
+  },
+
   handleAuthSuccess(context, response, redirect) {
+    this.clearError(context);
+    this.clearErrors(context);
     if (response.body.authenticated) {
       this.setToken(response.body.access_token);
       this.user.authenticated = true;
-      context.error = false;
-      // store.commit('login');
       if (redirect) router.push(redirect);
+    } else {
+      this.setError(context, 'Unable to login with the provided username and password');
     }
   },
 
   handleAuthFailure(context, response) {
-    if (response.body.error) context.error = response.body.message;
+    this.clearError(context);
+    this.clearErrors(context);
+    if (response.body.error) this.setErrors(context, response.body.validation.errors);
     this.logout();
   },
 
   logout() {
     this.removeToken();
     this.user.authenticated = false;
-    // store.commit('logout');
   },
 
   login(context, credentials, redirect) {
