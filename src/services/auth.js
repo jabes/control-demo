@@ -28,10 +28,6 @@ export default {
     context.error = error;
   },
 
-  clearError(context) {
-    context.error = null;
-  },
-
   setErrors(context, errors = []) {
     if (!errors) return;
     for (let error of errors) {
@@ -40,38 +36,49 @@ export default {
       let constraint = error['constraint'];
       let bail = context.errors.hasOwnProperty(key);
       if (bail) continue;
-      switch (constraint) {
-        case 'empty':
-          msg = 'not allowed to be empty';
-          break;
-        case 'allowOnly':
-          if (key === 'password_confirm') msg = 'passwords must match';
-          break;
+      if (constraint) {
+        switch (constraint) {
+          case 'empty':
+            msg = 'not allowed to be empty';
+            break;
+          case 'allowOnly':
+            if (key === 'password_confirm') msg = 'passwords must match';
+            break;
+        }
       }
       context.errors[key] = msg;
     }
+  },
+
+  clearError(context) {
+    context.error = null;
   },
 
   clearErrors(context) {
     context.errors = {};
   },
 
-  handleAuthSuccess(context, response, redirect) {
+  handleResponseErrors(context, response) {
     this.clearError(context);
     this.clearErrors(context);
+    if (response.body.error) {
+      if (response.body.validation) this.setErrors(context, response.body.validation.errors);
+      else if (response.body.message) this.setError(context, response.body.message);
+      else this.setError(context, 'Unable to login with the provided username and password');
+    }
+  },
+
+  handleAuthSuccess(context, response, redirect) {
+    this.handleResponseErrors(context, response);
     if (response.body.authenticated) {
       this.setToken(response.body.access_token);
       this.user.authenticated = true;
       if (redirect) router.push(redirect);
-    } else {
-      this.setError(context, 'Unable to login with the provided username and password');
     }
   },
 
   handleAuthFailure(context, response) {
-    this.clearError(context);
-    this.clearErrors(context);
-    if (response.body.error) this.setErrors(context, response.body.validation.errors);
+    this.handleResponseErrors(context, response);
     this.logout();
   },
 

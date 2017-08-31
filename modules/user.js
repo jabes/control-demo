@@ -6,6 +6,25 @@ const table = 'users';
 
 class User {
 
+  static throwError(reject, message) {
+    reject({
+      error: true,
+      message: message,
+    });
+  }
+
+  static throwValidationError(reject, key, message) {
+    reject({
+      error: true,
+      validation: {
+        errors: [{
+          key: key,
+          message: message,
+        }]
+      }
+    });
+  }
+
   static get(username) {
     return new Promise((resolve, reject) => {
       db
@@ -21,7 +40,7 @@ class User {
     return new Promise((resolve, reject) => {
       User.get(username)
         .then(user => {
-          if (user) reject('User already exists');
+          if (user) User.throwValidationError(reject, 'username', 'this username is taken');
           const uuid = Auth.generateUUID();
           const token = Auth.generateToken(uuid);
           const hash = Auth.hashPassword(password);
@@ -35,7 +54,7 @@ class User {
             .insert(table, data)
             .then(response => {
               if (response.inserted) resolve(data);
-              reject('Unable to create new user');
+              this.throwError(reject, 'Failed to create account');
             }, reject);
         }, reject);
     });
@@ -48,9 +67,9 @@ class User {
           if (user) {
             const valid = Auth.verifyPassword(password, user.password_hash);
             if (valid) resolve(user);
-            reject('Password is not valid');
+            User.throwValidationError(reject, 'password', 'password is not valid');
           }
-          reject('User does not exist');
+          User.throwValidationError(reject, 'username', 'username does not exist');
         }, reject);
     });
   }

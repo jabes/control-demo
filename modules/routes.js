@@ -77,10 +77,9 @@ module.exports = [
           access_token: user.token,
         });
       }, error => {
-        reply({
+        reply(Object.assign({
           authenticated: false,
-          error: error.message,
-        });
+        }, error));
       });
     }
   },
@@ -109,10 +108,9 @@ module.exports = [
           access_token: user.token,
         });
       }, error => {
-        reply({
+        reply(Object.assign({
           authenticated: false,
-          error: error.message,
-        });
+        }, error));
       });
     }
   },
