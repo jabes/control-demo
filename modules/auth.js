@@ -12,13 +12,14 @@ class Auth {
   }
 
   static generateToken(uuid) {
+    const issued = Math.round(Date.now() / 1000);
+    const expires = issued + (60 * 60 * 24); // 24 hours
     const payload = {
       id: uuid,
+      iat: issued,
+      exp: expires,
     };
-    const options = {
-      expiresIn: '1h',
-    };
-    return jwt.sign(payload, secret, options);
+    return jwt.sign(payload, secret);
   }
 
   static hashPassword(password) {

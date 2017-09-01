@@ -105,8 +105,20 @@ class Database {
       .insert(data)
       .run(this.conn)
       .error(error => {
-        console.error('Failed to insert record');
-        console.error(data);
+        console.error(`Failed to insert record: ${data}`);
+        console.error(error.message);
+        process.exit(1);
+      });
+  }
+
+  update(table_name, key, data) {
+    return Rethink
+      .table(table_name)
+      .get(key)
+      .update(data)
+      .run(this.conn)
+      .error(error => {
+        console.error(`Failed to update record: ${data}`);
         console.error(error.message);
         process.exit(1);
       });

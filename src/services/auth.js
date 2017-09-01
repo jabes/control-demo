@@ -121,17 +121,10 @@ export default {
       );
   },
 
-  getTokenExpirationDate(encodedToken) {
-    const date = new Date(0);
-    const token = decode(encodedToken);
-    if (!token.exp) return null;
-    date.setUTCSeconds(token.exp);
-    return date;
-  },
-
   isTokenExpired(token) {
-    const expirationDate = this.getTokenExpirationDate(token);
-    return expirationDate < new Date();
+    const now = Math.round(Date.now() / 1000);
+    const exp = decode(token).exp;
+    return (exp - now) < 0;
   },
 
   isLoggedIn() {

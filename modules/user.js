@@ -6,12 +6,12 @@ const table = 'users';
 
 class User {
 
-  static throwError(reject, message) {
-    reject({
-      error: true,
-      message: message,
-    });
-  }
+  // static throwError(reject, message) {
+  //   reject({
+  //     error: true,
+  //     message: message,
+  //   });
+  // }
 
   static throwValidationError(reject, key, message) {
     reject({
@@ -52,11 +52,18 @@ class User {
           };
           db
             .insert(table, data)
-            .then(response => {
-              if (response.inserted) resolve(data);
-              this.throwError(reject, 'Failed to create account');
-            }, reject);
+            .then(resolve(data), reject);
         }, reject);
+    });
+  }
+
+  static refreshToken(user) {
+    console.log('refresh token');
+    return new Promise((resolve, reject) => {
+      user.token = Auth.generateToken(user.id);
+      db
+        .update(table, user.id, user)
+        .then(resolve(user), reject);
     });
   }
 
@@ -66,10 +73,11 @@ class User {
         .then(user => {
           if (user) {
             const valid = Auth.verifyPassword(password, user.password_hash);
-            if (valid) resolve(user);
-            User.throwValidationError(reject, 'password', 'password is not valid');
-          }
-          User.throwValidationError(reject, 'username', 'username does not exist');
+            if (valid) {
+              User.refreshToken(user)
+                .then(user => resolve(user), reject);
+            } else User.throwValidationError(reject, 'password', 'password is not valid');
+          } else User.throwValidationError(reject, 'username', 'username does not exist');
         }, reject);
     });
   }
