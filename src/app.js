@@ -2,17 +2,15 @@ import Vue from 'vue';
 import VueResource from 'vue-resource'
 import App from './components/App.vue';
 import Utils from "./classes/class.utils.js";
-import router from './router';
 import store from './store';
+import router from './router';
 
 Vue.use(VueResource);
 
-const app = new Vue({
+new Vue({
   el: '#app',
-  router,
-  store,
   render: h => h(App),
   methods: Utils,
+  store,
+  router,
 });
-
-export {app, router, store}

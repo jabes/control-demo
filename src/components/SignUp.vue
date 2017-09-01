@@ -61,7 +61,7 @@
     methods: {
       submit() {
         const redirect = {name: 'dashboard'};
-        Auth.signup(this, this.credentials, redirect);
+        Auth.signup(this.$root, this.credentials, redirect);
       }
     }
   }

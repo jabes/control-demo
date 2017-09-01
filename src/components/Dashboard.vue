@@ -50,8 +50,7 @@
       }
     },
     mounted() {
-      const context = this.$root;
-      Todos.get(context);
+      Todos.get(this.$root);
     },
     computed: {
       todos() {
@@ -60,21 +59,15 @@
     },
     methods: {
       add(message) {
-        const context = this.$root;
-        if (message.length > 0) {
-          Todos.insert(context, message);
-        }
+        if (message.length > 0) Todos.insert(this.$root, message);
         this.todo.message = '';
       },
       remove(id) {
-        const context = this.$root;
-        Todos.remove(context, id);
+        Todos.remove(this.$root, id);
       },
       toggle(id, completed) {
-        const context = this.$root;
-        Todos.update(context, id, {
-          completed: !completed
-        });
+        const data = {completed: !completed};
+        Todos.update(this.$root, id, data);
       },
     },
   }
@@ -121,6 +114,5 @@
     color $color-off
     &:hover
       color $color-on
-
 
 </style>
