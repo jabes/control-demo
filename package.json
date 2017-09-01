@@ -41,6 +41,7 @@
     "cssnano": "3.10.0",
     "eslint": "4.5.0",
     "eslint-loader": "1.9.0",
+    "favicons": "4.8.6",
     "file-loader": "0.11.2",
     "json-loader": "0.5.7",
     "mocha": "3.5.0",
@@ -58,6 +59,7 @@
     "webpack-hot-middleware": "2.18.2"
   },
   "scripts": {
+    "build": "node build.js",
     "start": "concurrently 'rethinkdb --config-file rethinkdb.conf' nodemon",
     "test": "mocha --reporter spec"
   }

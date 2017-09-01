@@ -9,8 +9,18 @@ This is a simple todo app built with Node, Vue, and RethinkDB.
 
 ### Install
 
+This will install all third party dependencies required by the application.
+
 ```bash
 npm install
+```
+
+### Build
+
+This will create all assets required by the application.
+
+```bash
+npm run build
 ```
 
 ### Start Server
