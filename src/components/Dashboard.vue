@@ -16,13 +16,19 @@
     </header>
 
     <article class="container">
-      <form class="margin-bottom-300"
+
+      <form class="flex items-center margin-bottom-300"
             v-on:submit.prevent>
-        <input type="text"
-               placeholder="Enter your reminder.."
-               v-model="todo.message">
-        <button class="btn secondary-white" v-on:click="add(todo.message)">Add</button>
+        <div class="flex-auto">
+          <input type="text"
+                 placeholder="Enter your reminder.."
+                 v-model="todo.message">
+        </div>
+        <div class="flex-none">
+          <button class="btn secondary-white margin-left-100" v-on:click="add(todo.message)">Add</button>
+        </div>
       </form>
+
       <ul class="list-style-none margin-0 padding-0">
         <li class="flex items-center margin-bottom-100"
             v-for="todo in todos"
@@ -35,7 +41,9 @@
           <button class="trash" v-on:click="remove(todo.id)" v-html="icons.trash"></button>
         </li>
       </ul>
+
       <p class="font-size-22 opacity-70" v-if="todos.length === 0">You have no reminders.</p>
+
     </article>
 
   </div>
@@ -86,7 +94,7 @@
     $color-text = $colors['grey']
     $color-bg = $colors['white']
     display inline-block
-    width 500px
+    width 100%
     margin 0
     padding .75em
     border-radius 5px
