@@ -3,29 +3,31 @@ import {endpoints} from './api'
 
 export default {
 
-  app: null,
-  router: null,
-  store: null,
-  http: null,
+  app: null, // Vue
+  context: null, // VueComponent
+  router: null, // VueRouter
+  store: null, // VueStore
+  http: null,  // VueResource
 
   setContext(context) {
-    this.app = context.$root;
+    this.context = context;
+    this.app = this.context.$root;
     this.router = this.app.$router;
     this.store = this.app.$store;
     this.http = this.app.$http;
   },
 
-  setError(context, error = '') {
-    context.error = error;
+  setError(error = '') {
+    this.context.error = error;
   },
 
-  setErrors(context, errors = []) {
+  setErrors(errors = []) {
     if (!errors) return;
     for (let error of errors) {
       let key = error['key'];
       let msg = error['message'];
       let constraint = error['constraint'];
-      let bail = context.errors.hasOwnProperty(key);
+      let bail = this.context.errors.hasOwnProperty(key);
       if (bail) continue;
       if (constraint) {
         switch (constraint) {
@@ -37,16 +39,16 @@ export default {
             break;
         }
       }
-      context.errors[key] = msg;
+      this.context.errors[key] = msg;
     }
   },
 
-  clearError(context) {
-    context.error = null;
+  clearError() {
+    this.context.error = null;
   },
 
-  clearErrors(context) {
-    context.errors = {};
+  clearErrors() {
+    this.context.errors = {};
   },
 
   checkTokenResponse(response) {
@@ -62,17 +64,17 @@ export default {
     }
   },
 
-  handleResponseErrors(context, response) {
-    this.clearError(context);
-    this.clearErrors(context);
+  handleResponseErrors(response) {
+    this.clearError();
+    this.clearErrors();
     const error = this.app.objectResolvePath(response, 'body.message');
     const errors = this.app.objectResolvePath(response, 'body.validation.errors');
-    if (errors) this.setErrors(context, errors);
-    else if (error) this.setError(context, error);
+    if (errors) this.setErrors(errors);
+    else if (error) this.setError(error);
   },
 
-  handleAuthSuccess(context, response, redirect) {
-    this.handleResponseErrors(context, response);
+  handleAuthSuccess(response, redirect) {
+    this.handleResponseErrors(response);
     const authenticated = this.app.objectResolvePath(response, 'body.authenticated');
     const token = this.app.objectResolvePath(response, 'body.access_token');
     if (authenticated && token) {
@@ -81,8 +83,8 @@ export default {
     }
   },
 
-  handleAuthFailure(context, response) {
-    this.handleResponseErrors(context, response);
+  handleAuthFailure(response) {
+    this.handleResponseErrors(response);
     this.logout();
   },
 
@@ -95,11 +97,11 @@ export default {
     this.setContext(context);
     return this.http.post(endpoints.users.login, credentials)
       .then(
-        response => this.handleAuthSuccess(context, response, redirect),
-        response => this.handleAuthFailure(context, response)
+        response => this.handleAuthSuccess(response, redirect),
+        response => this.handleAuthFailure(response)
       )
       .catch(
-        error => this.handleAuthFailure(context, error)
+        error => this.handleAuthFailure(error)
       );
   },
 
@@ -107,11 +109,11 @@ export default {
     this.setContext(context);
     return this.http.post(endpoints.users.signup, credentials)
       .then(
-        response => this.handleAuthSuccess(context, response, redirect),
-        response => this.handleAuthFailure(context, response)
+        response => this.handleAuthSuccess(response, redirect),
+        response => this.handleAuthFailure(response)
       )
       .catch(
-        error => this.handleAuthFailure(context, error)
+        error => this.handleAuthFailure(error)
       );
   },
 

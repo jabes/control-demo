@@ -3,27 +3,27 @@ import {endpoints} from './api'
 
 export default {
 
-  app: null,
-  router: null,
-  store: null,
-  http: null,
+  app: null, // Vue
+  context: null, // VueComponent
+  router: null, // VueRouter
+  store: null, // VueStore
+  http: null,  // VueResource
 
   setContext(context) {
-    this.app = context.$root;
+    this.context = context;
+    this.app = this.context.$root;
     this.router = this.app.$router;
     this.store = this.app.$store;
     this.http = this.app.$http;
   },
 
-  handleSuccess(context, response) {
-    Auth.setContext(context);
+  handleSuccess(response) {
     Auth.checkTokenResponse(response);
     let todos = this.app.objectResolvePath(response, 'body.todos');
     if (todos) this.store.commit('setTodos', todos);
   },
 
-  handleFailure(context, response) {
-    Auth.setContext(context);
+  handleFailure(response) {
     Auth.checkTokenResponse(response);
   },
 
@@ -34,11 +34,11 @@ export default {
     };
     return this.http.post(endpoints.todos.get, payload)
       .then(
-        response => this.handleSuccess(context, response),
-        response => this.handleFailure(context, response)
+        response => this.handleSuccess(response),
+        response => this.handleFailure(response)
       )
       .catch(
-        error => this.handleFailure(context, error)
+        error => this.handleFailure(error)
       );
   },
 
@@ -50,11 +50,11 @@ export default {
     };
     return this.http.post(endpoints.todos.insert, payload)
       .then(
-        response => this.handleSuccess(context, response),
-        response => this.handleFailure(context, response)
+        response => this.handleSuccess(response),
+        response => this.handleFailure(response)
       )
       .catch(
-        error => this.handleFailure(context, error)
+        error => this.handleFailure(error)
       );
   },
 
@@ -67,11 +67,11 @@ export default {
     };
     return this.http.post(endpoints.todos.update, payload)
       .then(
-        response => this.handleSuccess(context, response),
-        response => this.handleFailure(context, response)
+        response => this.handleSuccess(response),
+        response => this.handleFailure(response)
       )
       .catch(
-        error => this.handleFailure(context, error)
+        error => this.handleFailure(error)
       );
   },
 
@@ -83,11 +83,11 @@ export default {
     };
     return this.http.post(endpoints.todos.remove, payload)
       .then(
-        response => this.handleSuccess(context, response),
-        response => this.handleFailure(context, response)
+        response => this.handleSuccess(response),
+        response => this.handleFailure(response)
       )
       .catch(
-        error => this.handleFailure(context, error)
+        error => this.handleFailure(error)
       );
   },
 
