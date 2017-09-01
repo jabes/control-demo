@@ -14,9 +14,7 @@ export default {
     }
   },
 
-  handleFailure(context) {
-    context.$store.commit('removeTodos');
-  },
+  handleFailure() {},
 
   get(context) {
     const payload = {

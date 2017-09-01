@@ -8,8 +8,9 @@
     <form v-on:submit.prevent>
       <input name="todo"
              placeholder="Enter your reminder.."
-             v-model="todo">
-      <button class="btn secondary-white" v-on:click="submit()">Submit</button>
+             v-model="todo"
+             required>
+      <button class="btn secondary-white" v-on:click="submit()">Add</button>
     </form>
 
     <ul>
@@ -40,7 +41,9 @@
     methods: {
       submit() {
         const context = this.$root;
-        Todos.insert(context, this.todo);
+        if (this.todo.length > 0) {
+          Todos.insert(context, this.todo);
+        }
         this.todo = '';
       }
     },
