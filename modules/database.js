@@ -118,7 +118,20 @@ class Database {
       .update(data)
       .run(this.conn)
       .error(error => {
-        console.error(`Failed to update record: ${data}`);
+        console.error(`Failed to update record: ${key}:${data}`);
+        console.error(error.message);
+        process.exit(1);
+      });
+  }
+
+  delete(table_name, key) {
+    return Rethink
+      .table(table_name)
+      .get(key)
+      .delete()
+      .run(this.conn)
+      .error(error => {
+        console.error(`Failed to delete record: ${key}`);
         console.error(error.message);
         process.exit(1);
       });

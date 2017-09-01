@@ -3,6 +3,7 @@
 const Joi = require('joi');
 const Relish = require('relish');
 const Auth = require('./auth');
+const Response = require('./response');
 const User = require('./user');
 const Todo = require('./todo');
 const webpackConfig = require('../webpack.config');
@@ -11,6 +12,14 @@ const relish = Relish({
   stripQuotes: true,
   messages: {},
 });
+
+function requireValidToken(request, reply) {
+  const token = request.payload.token;
+  if (!token) Response.throwError(reply, 'tokenRequired', 'A valid token is required');
+  const decoded = Auth.verifyToken(request.payload.token);
+  if (!decoded) Response.throwError(reply, 'tokenInvalid', 'Provided token is not valid');
+  return decoded;
+}
 
 module.exports = [
 
@@ -104,9 +113,8 @@ module.exports = [
       }
     },
     handler: function (request, reply) {
-      const token = Auth.verifyToken(request.payload.token);
-      if (!token) reply();
-      Todo.get(token.id).then(todos => reply({todos}), reply);
+      const token = requireValidToken(request, reply);
+      Todo.getAll(token.id).then(todos => reply({todos}), reply);
     }
   },
 
@@ -117,15 +125,53 @@ module.exports = [
       validate: {
         payload: {
           token: Joi.string().required(),
-          todo: Joi.string().required(),
+          message: Joi.string().required(),
         }
       }
     },
     handler: function (request, reply) {
-      const token = Auth.verifyToken(request.payload.token);
-      if (!token) reply();
-      Todo.insert(token.id, request.payload.todo).then(() => {
-        Todo.get(token.id).then(todos => reply({todos}), reply);
+      const token = requireValidToken(request, reply);
+      Todo.insert(token.id, request.payload.message).then(() => {
+        Todo.getAll(token.id).then(todos => reply({todos}), reply);
+      }, reply);
+    }
+  },
+
+  {
+    method: 'POST',
+    path: '/todos/update',
+    config: {
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+          id: Joi.string().required(),
+          data: Joi.object().required(),
+        }
+      }
+    },
+    handler: function (request, reply) {
+      const token = requireValidToken(request, reply);
+      Todo.update(request.payload.id, request.payload.data).then(() => {
+        Todo.getAll(token.id).then(todos => reply({todos}), reply);
+      }, reply);
+    }
+  },
+
+  {
+    method: 'POST',
+    path: '/todos/remove',
+    config: {
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+          id: Joi.string().required(),
+        }
+      }
+    },
+    handler: function (request, reply) {
+      const token = requireValidToken(request, reply);
+      Todo.remove(request.payload.id).then(() => {
+        Todo.getAll(token.id).then(todos => reply({todos}), reply);
       }, reply);
     }
   },

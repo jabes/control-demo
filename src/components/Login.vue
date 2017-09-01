@@ -9,7 +9,6 @@
           <div class="margin-bottom-200">
             <p>
               <input type="text"
-                     name="username"
                      placeholder="Username"
                      v-model="credentials.username">
               <span class="block margin-top-50 color-red-light"
@@ -17,7 +16,6 @@
             </p>
             <p>
               <input type="password"
-                     name="password"
                      placeholder="Password"
                      v-model="credentials.password">
               <span class="block margin-top-50 color-red-light"

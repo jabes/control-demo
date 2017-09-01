@@ -1,29 +1,11 @@
 'use strict';
 
 const Auth = require('./auth');
+const Response = require('./response');
 const db = global.database;
 const table = 'users';
 
 class User {
-
-  // static throwError(reject, message) {
-  //   reject({
-  //     error: true,
-  //     message: message,
-  //   });
-  // }
-
-  static throwValidationError(reject, key, message) {
-    reject({
-      error: true,
-      validation: {
-        errors: [{
-          key: key,
-          message: message,
-        }]
-      }
-    });
-  }
 
   static get(username) {
     return new Promise((resolve, reject) => {
@@ -40,7 +22,7 @@ class User {
     return new Promise((resolve, reject) => {
       User.get(username)
         .then(user => {
-          if (user) User.throwValidationError(reject, 'username', 'this username is taken');
+          if (user) Response.throwValidationError(reject, 'username', 'this username is taken');
           const uuid = Auth.generateUUID();
           const token = Auth.generateToken(uuid);
           const hash = Auth.hashPassword(password);
@@ -75,8 +57,8 @@ class User {
             if (valid) {
               User.refreshToken(user)
                 .then(user => resolve(user), reject);
-            } else User.throwValidationError(reject, 'password', 'password is not valid');
-          } else User.throwValidationError(reject, 'username', 'username does not exist');
+            } else Response.throwValidationError(reject, 'password', 'password is not valid');
+          } else Response.throwValidationError(reject, 'username', 'username does not exist');
         }, reject);
     });
   }

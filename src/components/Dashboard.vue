@@ -13,18 +13,22 @@
     <form class="margin-top-200 margin-bottom-300"
           v-on:submit.prevent>
       <input type="text"
-             name="todo"
              placeholder="Enter your reminder.."
-             v-model="todo"
+             v-model="todo.message"
              required>
-      <button class="btn secondary-white" v-on:click="submit()">Add</button>
+      <button class="btn secondary-white" v-on:click="add(todo.message)">Add</button>
     </form>
 
     <ul class="list-style-none margin-0 padding-0">
-      <li class="flex items-center margin-bottom-100" v-for="todo in todos">
-        <input type="checkbox">
-        <span class="margin-left-100 margin-right-100">{{ todo }}</span>
-        <button class="trash" v-on:click="remove()" v-html="icons.trash"></button>
+      <li class="flex items-center margin-bottom-100"
+          v-for="todo in todos"
+          v-bind:class="{ 'opacity-50': todo.completed }">
+        <input type="checkbox"
+               v-bind:checked="todo.completed"
+               v-on:change="toggle(todo.id, todo.completed)">
+        <span class="font-size-18 margin-left-100 margin-right-100"
+              v-bind:class="{ 'text-decoration-line-through': todo.completed }">{{ todo.message }}</span>
+        <button class="trash" v-on:click="remove(todo.id)" v-html="icons.trash"></button>
       </li>
     </ul>
 
@@ -37,7 +41,9 @@
   export default {
     data() {
       return {
-        todo: '',
+        todo: {
+          message: '',
+        },
         icons: {
           trash: require('!!svg-inline-loader!../images/trash.svg')
         }
@@ -53,13 +59,23 @@
       }
     },
     methods: {
-      submit() {
+      add(message) {
         const context = this.$root;
-        if (this.todo.length > 0) {
-          Todos.insert(context, this.todo);
+        if (message.length > 0) {
+          Todos.insert(context, message);
         }
-        this.todo = '';
-      }
+        this.todo.message = '';
+      },
+      remove(id) {
+        const context = this.$root;
+        Todos.remove(context, id);
+      },
+      toggle(id, completed) {
+        const context = this.$root;
+        Todos.update(context, id, {
+          completed: !completed
+        });
+      },
     },
   }
 </script>
@@ -83,25 +99,28 @@
   input[type=checkbox]
     $color-bg = $colors['white']
     display inline-block
-    width 20px
-    height 20px
+    width 30px
+    height 30px
     margin 0
     padding 0
     border-radius 5px
     background $color-bg
     border none
+    cursor pointer
 
   .trash
-    $color = $colors['white']
+    $color-off = $colors['white']
+    $color-on = $colors['red']
+    cursor pointer
     border none
     background transparent
-    width 30px
-    height 30px
+    width 20px
+    height 20px
     padding 0
     margin 0
-    vertical-align middle
-    color $color
-    fill $color
+    color $color-off
+    &:hover
+      color $color-on
 
 
 </style>
