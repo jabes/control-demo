@@ -73,7 +73,7 @@
       }
     },
     mounted() {
-      Todos.get(this.$root);
+      Todos.get(this);
     },
     computed: {
       todos() {
@@ -82,15 +82,15 @@
     },
     methods: {
       add(message) {
-        if (message.length > 0) Todos.insert(this.$root, message);
+        if (message.length > 0) Todos.insert(this, message);
         this.todo.message = '';
       },
       remove(id) {
-        Todos.remove(this.$root, id);
+        Todos.remove(this, id);
       },
       toggle(id, completed) {
         const data = {completed: !completed};
-        Todos.update(this.$root, id, data);
+        Todos.update(this, id, data);
       },
     },
   }

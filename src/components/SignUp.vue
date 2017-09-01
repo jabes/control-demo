@@ -2,7 +2,7 @@
   <div class="container height-100">
     <div class="flex justify-center items-center height-100">
       <div class="flex-none">
-        <h1>Sign-up</h1>
+        <div v-html="icons.logo"></div>
         <form v-on:submit.prevent>
           <p class="block color-red-light"
              v-if="error">{{ error }}</p>
@@ -56,12 +56,15 @@
           password: '',
           password_confirm: '',
         },
+        icons: {
+          logo: require('!!svg-inline-loader!../images/logo.svg')
+        },
       }
     },
     methods: {
       submit() {
         const redirect = {name: 'dashboard'};
-        Auth.signup(this.$root, this.credentials, redirect);
+        Auth.signup(this, this.credentials, redirect);
       }
     }
   }

@@ -10,7 +10,8 @@ import Auth from '../services/auth';
 Vue.use(VueRouter);
 
 function requireAuth(to, from, next) {
-  const authenticated = Auth.isLoggedIn(router.app);
+  Auth.setContext(router.app);
+  const authenticated = Auth.isLoggedIn();
   if (!authenticated) next({name: 'login'});
   next();
 }
@@ -35,7 +36,8 @@ const routes = [
     path: '/logout',
     name: 'logout',
     beforeEnter: (to, from, next) => {
-      Auth.logout(router.app);
+      Auth.setContext(router.app);
+      Auth.logout();
       next({name: 'login'});
     }
   },
