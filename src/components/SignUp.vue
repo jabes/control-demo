@@ -8,7 +8,8 @@
              v-if="error">{{ error }}</p>
           <div class="margin-bottom-200">
             <p>
-              <input name="username"
+              <input type="text"
+                     name="username"
                      placeholder="Username"
                      v-model="credentials.username">
               <span class="block margin-top-50 color-red-light"

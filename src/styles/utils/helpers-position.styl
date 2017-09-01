@@ -2,6 +2,8 @@ for $i in 0..10
   $size = $i * 10
   .index-{$size}
     z-index $size
+  .index-neg-{$size}
+    z-index $size * -1
 
 $position = static absolute fixed relative
 for $value in $position

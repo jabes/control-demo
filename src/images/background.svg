@@ -1,32 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="1440px" height="1357px" viewBox="0 0 1440 1357" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 43.1 (39012) - http://www.bohemiancoding.com/sketch -->
-    <title>Group</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
-            <stop stop-color="#06101B" offset="0%"></stop>
-            <stop stop-color="#296BAC" offset="100%"></stop>
-        </linearGradient>
-        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
-            <stop stop-color="#3A98F3" offset="0%"></stop>
-            <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
-        </linearGradient>
-        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
-            <stop stop-color="#3A98F3" offset="0%"></stop>
-            <stop stop-color="#06101B" stop-opacity="0" offset="100%"></stop>
-        </linearGradient>
-    </defs>
-    <g id="Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Home">
-            <g id="Hero" transform="translate(-35.000000, 0.000000)">
-                <g id="Group">
-                    <rect id="Hero" fill="url(#linearGradient-1)" x="35" y="0" width="1440" height="1344"></rect>
-                    <polygon id="Graph" stroke="#3A98F3" stroke-width="5" fill="url(#linearGradient-2)" opacity="0.100000001" points="16.8899994 1051.34766 198.109375 811.71875 429.679688 990.566406 731.59375 657.621094 893.160156 893.976562 1312.125 488.632812 1483.17578 783.90625 1483.17578 1351.43283 16.8933681 1351.43283"></polygon>
-                    <polygon id="Graph" stroke="#3A98F3" stroke-width="5" fill="url(#linearGradient-3)" opacity="0.100000001" points="9.58203125 779.566406 226.660156 596.648438 431.800781 744.972656 767.21875 294.996094 1191.70313 794.953125 1484.92578 520.566406 1484.92578 1354.02213 7.28745294 1354.02213"></polygon>
-                    <polygon id="Graph" stroke="#3A98F3" stroke-width="5" fill="url(#linearGradient-3)" opacity="0.100000001" points="15.0078125 484.824219 227.472656 662.179688 413.554688 473.699219 821.347656 650.476562 1000.93359 364.0625 1342.19531 1052.13672 1501.16406 840.792969 1501.16406 1354.26846 0.0628176748 1354.26846"></polygon>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1357">
+  <defs>
+    <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="a">
+      <stop stop-color="#06101B" offset="0%"/>
+      <stop stop-color="#296BAC" offset="100%"/>
+    </linearGradient>
+    <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="b">
+      <stop stop-color="#3A98F3" offset="0%"/>
+      <stop stop-opacity="0" offset="100%"/>
+    </linearGradient>
+    <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="c">
+      <stop stop-color="#3A98F3" offset="0%"/>
+      <stop stop-color="#06101B" stop-opacity="0" offset="100%"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#a)" d="M35 0h1440v1344H35z" transform="translate(-35)"/>
+  <path stroke="#3A98F3" stroke-width="5" fill="url(#b)" opacity=".1"
+        d="M16.89 1051.348l181.22-239.63 231.57 178.848L731.594 657.62 893.16 893.978l418.965-405.344 171.05 295.273v567.527H16.894z"
+        transform="translate(-35)"/>
+  <path stroke="#3A98F3" stroke-width="5" fill="url(#c)" opacity=".1"
+        d="M9.582 779.566L226.66 596.648 431.8 744.973l335.42-449.977 424.483 499.957 293.223-274.387v833.456H7.286z"
+        transform="translate(-35)"/>
+  <path stroke="#3A98F3" stroke-width="5" fill="url(#c)" opacity=".1"
+        d="M15.008 484.824L227.473 662.18 413.555 473.7l407.793 176.777 179.586-286.414 341.26 688.074 158.97-211.344v513.475H.064z"
+        transform="translate(-35)"/>
 </svg>
