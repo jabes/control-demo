@@ -1,21 +1,21 @@
-class Utils {
+module.exports = {
 
-  static reloadPage(params) {
+  reloadPage: (params) => {
     const loc = window.location;
     const query = this.serialize(params);
     window.location.href = loc.origin + loc.pathname + '?' + query;
-  }
+  },
 
-  static getQueryParams() {
+  getQueryParams: () => {
     let search = location.search.substring(1);
     search = decodeURI(search)
       .replace(/"/g, '\\"')
       .replace(/&/g, '","')
       .replace(/=/g, '":"');
     return search ? JSON.parse(`{"${search}"}`) : {};
-  }
+  },
 
-  static updateQueryParam(name, value) {
+  updateQueryParam: (name, value) => {
     let params = this.getQueryParams();
     if (value === params[name]) {
       return;
@@ -25,9 +25,9 @@ class Utils {
       delete params[name];
     }
     this.reloadPage(params);
-  }
+  },
 
-  static getParent(element, tagName) {
+  getParent: (element, tagName) => {
     let parent = element;
     while (parent.tagName !== tagName) {
       parent = parent.parentElement;
@@ -36,9 +36,9 @@ class Utils {
       }
     }
     return parent;
-  }
+  },
 
-  static getSibling(element, tagName) {
+  getSibling: (element, tagName) => {
     let sibling = element;
     while (sibling.tagName !== tagName) {
       sibling = sibling.nextSibling;
@@ -47,18 +47,18 @@ class Utils {
       }
     }
     return sibling;
-  }
+  },
 
-  static serialize(obj) {
+  serialize: (obj) => {
     let str = [];
     for (let p in obj)
       if (obj.hasOwnProperty(p)) {
         str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
       }
     return str.join("&");
-  }
+  },
 
-  static request(url, method = 'POST', data = null, cb = null) {
+  request: (url, method = 'POST', data = null, cb = null) => {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = () => {
       if (xmlhttp.readyState === XMLHttpRequest.DONE) {
@@ -77,9 +77,9 @@ class Utils {
     }
     xmlhttp.open(method, url, true);
     xmlhttp.send(data);
-  }
+  },
 
-  static submitAjaxForm(event, cb = null) {
+  submitAjaxForm: (event, cb = null) => {
     const form = event.target;
     const formData = new FormData(form);
     this.request(
@@ -92,57 +92,57 @@ class Utils {
         }
       }
     );
-  }
+  },
 
-  static submitForm(event) {
+  submitForm: (event) => {
     const form = this.getParent(event.target, 'FORM');
     const inputs = form.querySelectorAll('[value=""]');
     for (let input of inputs) {
       input.disabled = true;
     }
     form.submit();
-  }
+  },
 
-  static triggerEvent(element, type) {
+  triggerEvent: (element, type) => {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(type, false, true);
     element.dispatchEvent(evt);
-  }
+  },
 
-  static parseFloat(string) {
+  parseFloat: (string) => {
     let num = string.replace(/[^0-9.]/g, '');
     num = parseFloat(num);
     if (isNaN(num)) {
       num = 0;
     }
     return num;
-  }
+  },
 
-  static getCurrencyFormat(num) {
+  getCurrencyFormat: (num) => {
     const options = {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     };
     return '$' + Number(num).toLocaleString(undefined, options);
-  }
+  },
 
-  static easeInOut(currentTime, start, change, duration) {
+  easeInOut: (currentTime, start, change, duration) => {
     currentTime /= duration / 2;
     if (currentTime < 1) return change / 2 * currentTime * currentTime + start;
     currentTime -= 1;
     return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
-  }
+  },
 
-  static stopAnimateScroll() {
+  stopAnimateScroll: () => {
     window.removeEventListener('wheel', this.stopAnimateScroll);
     if (this.animateScrollInstance) {
       clearTimeout(this.animateScrollInstance);
       delete this.animateScrollInstance;
       this.waitForScrollFinish = false;
     }
-  }
+  },
 
-  static scrollTo(element, to, duration) {
+  scrollTo: (element, to, duration) => {
     const start = element.scrollTop;
     const change = to - start;
     const increment = 10;
@@ -163,13 +163,13 @@ class Utils {
     window.addEventListener('wheel', this.stopAnimateScroll);
     // begin the animation loop
     animateScroll(0);
-  }
+  },
 
-  static scrollToTop() {
+  scrollToTop: () => {
     this.scrollTo(document.body, 0, 1500);
-  }
+  },
 
-  static isElementInView(element) {
+  isElementInView: (element) => {
     const rect = element.getBoundingClientRect();
     const windowWidth = window.innerWidth || document.documentElement.clientWidth;
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -189,9 +189,9 @@ class Utils {
         rect.right <= windowWidth // left
       ),
     };
-  }
+  },
 
-  static touchCoords(event) {
+  touchCoords: (event) => {
     const touchEvents = ['touchmove', 'touchstart', 'touchend'];
     const isTouchEvent = touchEvents.indexOf(event.type) > -1;
     if (isTouchEvent) {
@@ -206,9 +206,9 @@ class Utils {
         y: event.clientY,
       };
     }
-  }
+  },
 
-  static prefixed(style, property) {
+  prefixed: (style, property) => {
     const prefixes = ['', 'webkit', 'Moz', 'MS', 'ms', 'o'];
     let camelProp = property[0].toUpperCase() + property.slice(1);
     for (let i = 0; i < prefixes.length; i++) {
@@ -220,22 +220,24 @@ class Utils {
       i++;
     }
     return undefined;
-  }
+  },
 
-  static getStyle(element, property) {
+  getStyle: (element, property) => {
     const style = element.style;
     const prefixed = this.prefixed(style, property);
     return style[prefixed];
-  }
+  },
 
-  static setStyle(element, property, value) {
+  setStyle: (element, property, value) => {
     const style = element.style;
     const prefixed = this.prefixed(style, property);
     return style[prefixed] = value;
-  }
+  },
 
-}
+  objectResolvePath: (object, path) => {
+    return path.split('.').reduce((prev, curr) => {
+      return prev ? prev[curr] : undefined;
+    }, object);
+  },
 
-if (typeof module === 'object' && module.exports) {
-  module.exports = Utils;
-}
+};

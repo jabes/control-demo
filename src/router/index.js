@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from '../components/Home.vue'
+import Dashboard from '../components/Dashboard.vue'
 import Login from '../components/Login.vue'
 import SignUp from '../components/SignUp.vue'
 
@@ -17,8 +17,12 @@ function requireAuth(to, from, next) {
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home,
+    redirect: 'dashboard',
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard,
     beforeEnter: requireAuth,
   },
   {
@@ -41,8 +45,8 @@ const routes = [
   },
 ];
 
-export function createRouter() {
-  return new VueRouter({
-    routes
-  });
-}
+const router = new VueRouter({
+  routes
+});
+
+export default router;

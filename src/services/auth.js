@@ -1,4 +1,4 @@
-import {app, router} from '../app'
+import {app, router, store} from '../app'
 import config from '../../config'
 import decode from 'jwt-decode'
 
@@ -7,22 +7,6 @@ const LOGIN_URL = `${API_URL}/users/login`;
 const SIGNUP_URL = `${API_URL}/users/create`;
 
 export default {
-
-  user: {
-    authenticated: false
-  },
-
-  setToken(access_token) {
-    localStorage.setItem('access_token', access_token);
-  },
-
-  getToken() {
-    return localStorage.getItem('access_token');
-  },
-
-  removeToken() {
-    localStorage.removeItem('access_token');
-  },
 
   setError(context, error = '') {
     context.error = error;
@@ -61,18 +45,18 @@ export default {
   handleResponseErrors(context, response) {
     this.clearError(context);
     this.clearErrors(context);
-    if (response.body.error) {
-      if (response.body.validation) this.setErrors(context, response.body.validation.errors);
-      else if (response.body.message) this.setError(context, response.body.message);
-      else this.setError(context, 'Unable to login with the provided username and password');
-    }
+    const error = app.objectResolvePath(response, 'body.message');
+    const errors = app.objectResolvePath(response, 'body.validation.errors');
+    if (errors) this.setErrors(context, errors);
+    else if (error) this.setError(context, error);
   },
 
   handleAuthSuccess(context, response, redirect) {
     this.handleResponseErrors(context, response);
-    if (response.body.authenticated) {
-      this.setToken(response.body.access_token);
-      this.user.authenticated = true;
+    const authenticated = app.objectResolvePath(response, 'body.authenticated');
+    const token = app.objectResolvePath(response, 'body.access_token');
+    if (authenticated && token) {
+      store.commit('setToken', token);
       if (redirect) router.push(redirect);
     }
   },
@@ -83,41 +67,28 @@ export default {
   },
 
   logout() {
-    this.removeToken();
-    this.user.authenticated = false;
+    store.commit('removeToken');
   },
 
   login(context, credentials, redirect) {
     return app.$http.post(LOGIN_URL, credentials)
       .then(
-        response => {
-          this.handleAuthSuccess(context, response, redirect);
-        },
-        response => {
-          this.handleAuthFailure(context, response);
-        }
+        response => this.handleAuthSuccess(context, response, redirect),
+        response => this.handleAuthFailure(context, response)
       )
       .catch(
-        error => {
-          this.handleAuthFailure(context, error);
-        }
+        error => this.handleAuthFailure(context, error)
       );
   },
 
   signup(context, credentials, redirect) {
     return app.$http.post(SIGNUP_URL, credentials)
       .then(
-        response => {
-          this.handleAuthSuccess(context, response, redirect);
-        },
-        response => {
-          this.handleAuthFailure(context, response);
-        }
+        response => this.handleAuthSuccess(context, response, redirect),
+        response => this.handleAuthFailure(context, response)
       )
       .catch(
-        error => {
-          this.handleAuthFailure(context, error);
-        }
+        error => this.handleAuthFailure(context, error)
       );
   },
 
@@ -128,7 +99,8 @@ export default {
   },
 
   isLoggedIn() {
-    const token = this.getToken();
+    // const token = store.state.token;
+    const token = localStorage.getItem('access_token');
     if (token) {
       const expired = this.isTokenExpired(token);
       return !expired;

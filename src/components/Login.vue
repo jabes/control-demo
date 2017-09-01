@@ -52,7 +52,8 @@
     },
     methods: {
       submit() {
-        Auth.login(this, this.credentials, '/');
+        const redirect = {name: 'dashboard'};
+        Auth.login(this, this.credentials, redirect);
       }
     }
   }

@@ -4,21 +4,23 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 
 const state = {
-  authenticated: false,
+  token: localStorage.getItem('access_token'),
 };
 
 const mutations = {
-  login(state) {
-    state.authenticated = true;
+  setToken(state, token) {
+    localStorage.setItem('access_token', token);
+    state.token = token;
   },
-  logout(state) {
-    state.authenticated = false;
+  removeToken(state) {
+    localStorage.removeItem('access_token');
+    state.token = null;
   },
 };
 
-export function createStore() {
-  return new Vuex.Store({
-    state,
-    mutations,
-  });
-}
+const store = new Vuex.Store({
+  state,
+  mutations,
+});
+
+export default store;

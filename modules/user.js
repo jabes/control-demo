@@ -58,7 +58,6 @@ class User {
   }
 
   static refreshToken(user) {
-    console.log('refresh token');
     return new Promise((resolve, reject) => {
       user.token = Auth.generateToken(user.id);
       db
