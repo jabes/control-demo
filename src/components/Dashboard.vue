@@ -6,7 +6,10 @@
       <div class="relative index-10 container">
         <div class="flex items-center">
           <div class="flex-auto">
-            <h1>Dashboard</h1>
+            <h1>
+              <span class="show-sm">Dashboard</span>
+              <span class="hide-sm">Dash</span>
+            </h1>
           </div>
           <div class="flex-none">
             <router-link :to="{ name: 'logout' }">Logout</router-link>
@@ -33,12 +36,18 @@
         <li class="flex items-center margin-bottom-100"
             v-for="todo in todos"
             v-bind:class="{ 'opacity-50': todo.completed }">
-          <input type="checkbox"
-                 v-bind:checked="todo.completed"
-                 v-on:change="toggle(todo.id, todo.completed)">
-          <span class="font-size-18 margin-left-100 margin-right-100"
-                v-bind:class="{ 'text-decoration-line-through': todo.completed }">{{ todo.message }}</span>
-          <button class="trash" v-on:click="remove(todo.id)" v-html="icons.trash"></button>
+          <div class="flex-none margin-right-100">
+            <input type="checkbox"
+                   v-bind:checked="todo.completed"
+                   v-on:change="toggle(todo.id, todo.completed)">
+          </div>
+          <div class="flex-auto">
+            <span class="font-size-18"
+                  v-bind:class="{ 'text-decoration-line-through': todo.completed }">{{ todo.message }}</span>
+          </div>
+          <div class="flex-none margin-left-100">
+            <button class="trash" v-on:click="remove(todo.id)" v-html="icons.trash"></button>
+          </div>
         </li>
       </ul>
 
