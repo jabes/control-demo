@@ -68,6 +68,7 @@ export default {
 
   logout() {
     store.commit('removeToken');
+    store.commit('removeTodos');
   },
 
   login(context, credentials, redirect) {

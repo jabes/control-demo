@@ -4,6 +4,7 @@ const Joi = require('joi');
 const Relish = require('relish');
 const Auth = require('./auth');
 const User = require('./user');
+const Todo = require('./todo');
 const webpackConfig = require('../webpack.config');
 
 const relish = Relish({
@@ -28,29 +29,6 @@ module.exports = [
         listing: false,
         index: true,
       }
-    }
-  },
-
-  {
-    method: 'POST',
-    path: '/sessions/check',
-    config: {
-      validate: {
-        failAction: relish.failAction,
-        options: {
-          abortEarly: false,
-        },
-        payload: {
-          id: Joi.string().required(),
-        }
-      }
-    },
-    handler: function (request, reply) {
-      const payload = request.payload;
-      const decoded = Auth.verifyToken(payload.access_token);
-      reply({
-        valid: !!decoded
-      });
     }
   },
 
@@ -112,6 +90,43 @@ module.exports = [
           authenticated: false,
         }, error));
       });
+    }
+  },
+
+  {
+    method: 'POST',
+    path: '/todos/get',
+    config: {
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+        }
+      }
+    },
+    handler: function (request, reply) {
+      const token = Auth.verifyToken(request.payload.token);
+      if (!token) reply();
+      Todo.get(token.id).then(todos => reply({todos}), reply);
+    }
+  },
+
+  {
+    method: 'POST',
+    path: '/todos/insert',
+    config: {
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+          todo: Joi.string().required(),
+        }
+      }
+    },
+    handler: function (request, reply) {
+      const token = Auth.verifyToken(request.payload.token);
+      if (!token) reply();
+      Todo.insert(token.id, request.payload.todo).then(() => {
+        Todo.get(token.id).then(todos => reply({todos}), reply);
+      }, reply);
     }
   },
 

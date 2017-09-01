@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 const state = {
   token: localStorage.getItem('access_token'),
+  todos: [],
 };
 
 const mutations = {
@@ -15,6 +16,12 @@ const mutations = {
   removeToken(state) {
     localStorage.removeItem('access_token');
     state.token = null;
+  },
+  setTodos(state, todos) {
+    state.todos = todos;
+  },
+  removeTodos(state) {
+    state.todos = [];
   },
 };
 

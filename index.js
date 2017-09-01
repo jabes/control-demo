@@ -16,7 +16,7 @@ const tables = [
   },
   {
     name: 'todos',
-    indexes: [],
+    indexes: ['user_id'],
   },
 ];
 
