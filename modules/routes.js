@@ -117,7 +117,7 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
-      Todo.getAll(token.id).then(todos => reply({todos}), reply);
+      Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
     }
   },
 
@@ -134,8 +134,8 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
-      Todo.insert(token.id, request.payload.message).then(() => {
-        Todo.getAll(token.id).then(todos => reply({todos}), reply);
+      Todo.insert(token.user.id, request.payload.message).then(() => {
+        Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
       }, reply);
     }
   },
@@ -155,7 +155,7 @@ module.exports = [
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
       Todo.update(request.payload.id, request.payload.data).then(() => {
-        Todo.getAll(token.id).then(todos => reply({todos}), reply);
+        Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
       }, reply);
     }
   },
@@ -174,7 +174,7 @@ module.exports = [
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
       Todo.remove(request.payload.id).then(() => {
-        Todo.getAll(token.id).then(todos => reply({todos}), reply);
+        Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
       }, reply);
     }
   },

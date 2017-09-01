@@ -120,17 +120,23 @@ export default {
       );
   },
 
-  isTokenExpired(token) {
+  isTokenExpired(decoded) {
     const now = Math.round(Date.now() / 1000);
-    const exp = decode(token).exp;
+    const exp = decoded.exp;
     return (exp - now) < 0;
   },
 
   isLoggedIn() {
     const token = this.store.state.token;
     if (token) {
-      const expired = this.isTokenExpired(token);
-      return !expired;
+      const decoded = decode(token);
+      const expired = this.isTokenExpired(decoded);
+      if (expired) return false;
+      else {
+        // get user info from access token on page load
+        this.store.commit('setUser', decoded.user);
+        return true;
+      }
     }
     return false;
   },

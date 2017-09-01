@@ -11,13 +11,13 @@ class Auth {
     return uuidv4();
   }
 
-  static generateToken(uuid) {
+  static generateToken(user) {
     const issued = Math.round(Date.now() / 1000);
     const expires = issued + (60 * 60 * 24); // 24 hours
     const payload = {
-      id: uuid,
       iat: issued,
       exp: expires,
+      user,
     };
     return jwt.sign(payload, secret);
   }
