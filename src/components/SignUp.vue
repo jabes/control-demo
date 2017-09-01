@@ -9,6 +9,13 @@
           <div class="margin-bottom-200">
             <p>
               <input type="text"
+                     placeholder="Full name"
+                     v-model="credentials.full_name">
+              <span class="block margin-top-50 color-red-light"
+                    v-if="errors.full_name">{{ errors.full_name }}</span>
+            </p>
+            <p>
+              <input type="text"
                      placeholder="Username"
                      v-model="credentials.username">
               <span class="block margin-top-50 color-red-light"
@@ -49,12 +56,14 @@
           username: '',
           password: '',
           password_confirm: '',
+          full_name: '',
         },
         error: '',
         errors: {
           username: '',
           password: '',
           password_confirm: '',
+          full_name: '',
         },
         icons: {
           logo: require('!!svg-inline-loader!../images/logo.svg')

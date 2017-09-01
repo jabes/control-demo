@@ -76,9 +76,11 @@ export default {
   handleAuthSuccess(response, redirect) {
     this.handleResponseErrors(response);
     const authenticated = this.app.objectResolvePath(response, 'body.authenticated');
-    const token = this.app.objectResolvePath(response, 'body.access_token');
-    if (authenticated && token) {
+    if (authenticated) {
+      const token = this.app.objectResolvePath(response, 'body.access_token');
+      const user = this.app.objectResolvePath(response, 'body.user');
       this.store.commit('setToken', token);
+      this.store.commit('setUser', user);
       if (redirect) this.router.push(redirect);
     }
   },
@@ -89,6 +91,7 @@ export default {
   },
 
   logout() {
+    this.store.commit('removeUser');
     this.store.commit('removeToken');
     this.store.commit('removeTodos');
   },

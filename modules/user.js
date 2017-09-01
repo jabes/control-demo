@@ -7,6 +7,14 @@ const table = 'users';
 
 class User {
 
+  static safe(user) {
+    return {
+      id: user.id,
+      username: user.username,
+      full_name: user.full_name,
+    };
+  }
+
   static get(username) {
     return new Promise((resolve, reject) => {
       db
@@ -18,19 +26,20 @@ class User {
     });
   }
 
-  static create(username, password) {
+  static create(username, password, full_name) {
     return new Promise((resolve, reject) => {
       User.get(username)
         .then(user => {
           if (user) Response.throwValidationError(reject, 'username', 'this username is taken');
           const uuid = Auth.generateUUID();
           const token = Auth.generateToken(uuid);
-          const hash = Auth.hashPassword(password);
+          const password_hash = Auth.hashPassword(password);
           const data = {
             id: uuid,
-            token: token,
-            username: username,
-            password_hash: hash,
+            token,
+            username,
+            full_name,
+            password_hash,
           };
           db
             .insert(table, data)

@@ -62,6 +62,7 @@ module.exports = [
         reply({
           authenticated: true,
           access_token: user.token,
+          user: User.safe(user),
         });
       }, error => {
         reply(Object.assign({
@@ -84,15 +85,17 @@ module.exports = [
           username: Joi.string().min(3).max(30).alphanum().required(),
           password: Joi.string().min(3).max(30).required(),
           password_confirm: Joi.string().valid(Joi.ref('password')).required(),
+          full_name: Joi.string().required(),
         }
       }
     },
     handler: function (request, reply) {
       const payload = request.payload;
-      User.create(payload.username, payload.password).then(user => {
+      User.create(payload.username, payload.password, payload.full_name).then(user => {
         reply({
           authenticated: true,
           access_token: user.token,
+          user: User.safe(user),
         });
       }, error => {
         reply(Object.assign({

@@ -11,8 +11,9 @@
               <span class="hide-sm">Dash</span>
             </h1>
           </div>
-          <div class="flex-none">
-            <router-link :to="{ name: 'logout' }">Logout</router-link>
+          <div class="flex-none text-right">
+            <div class="margin-bottom-50 font-size-18 font-weight-bold">{{ user.full_name }}</div>
+            <router-link class="color-grey-light" :to="{ name: 'logout' }">Logout</router-link>
           </div>
         </div>
       </div>
@@ -77,8 +78,11 @@
     },
     computed: {
       todos() {
-        return this.$store.state.todos
-      }
+        return this.$store.state.todos;
+      },
+      user() {
+        return this.$store.state.user;
+      },
     },
     methods: {
       add(message) {
