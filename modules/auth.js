@@ -1,15 +1,10 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
-const uuidv4 = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const secret = process.env.JWT_SECRET;
 
 class Auth {
-
-  static generateUUID() {
-    return uuidv4();
-  }
 
   static generateToken(user) {
     const issued = Math.round(Date.now() / 1000);

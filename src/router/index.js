@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
 import Dashboard from '../components/Dashboard.vue'
 import Login from '../components/Login.vue'
 import SignUp from '../components/SignUp.vue'
-
 import Auth from '../services/auth';
 
 Vue.use(VueRouter);
@@ -13,7 +11,7 @@ function requireAuth(to, from, next) {
   Auth.setContext(router.app);
   const authenticated = Auth.isLoggedIn();
   if (!authenticated) next({name: 'login'});
-  next();
+  else next();
 }
 
 const routes = [

@@ -31,16 +31,18 @@ class User {
       User.get(username)
         .then(user => {
           if (user) Response.throwValidationError(reject, 'username', 'this username is taken');
-          let mock = {
-            id: Auth.generateUUID(),
+          const password_hash = Auth.hashPassword(password);
+          const mock = {
             username,
+            password_hash,
             full_name,
           };
-          mock.token = Auth.generateToken(mock);
-          mock.password_hash = Auth.hashPassword(password);
-          db
-            .insert(table, mock)
-            .then(resolve(mock), reject);
+          db.insert(table, mock).then(response => {
+            const key = response.generated_keys[0];
+            db.get(table, key).then(user => {
+              User.refreshToken(user).then(user => resolve(user), reject);
+            }, reject);
+          }, reject);
         }, reject);
     });
   }
@@ -49,25 +51,19 @@ class User {
     return new Promise((resolve, reject) => {
       const safe = User.safe(user);
       user.token = Auth.generateToken(safe);
-      db
-        .update(table, user.id, user)
-        .then(resolve(user), reject);
+      db.update(table, user.id, user).then(resolve(user), reject);
     });
   }
 
   static login(username, password) {
     return new Promise((resolve, reject) => {
-      User.get(username)
-        .then(user => {
-          if (user) {
-            const valid = Auth.verifyPassword(password, user.password_hash);
-            if (valid) {
-              User
-                .refreshToken(user)
-                .then(user => resolve(user), reject);
-            } else Response.throwValidationError(reject, 'password', 'password is not valid');
-          } else Response.throwValidationError(reject, 'username', 'username does not exist');
-        }, reject);
+      User.get(username).then(user => {
+        if (user) {
+          const valid = Auth.verifyPassword(password, user.password_hash);
+          if (valid) User.refreshToken(user).then(user => resolve(user), reject);
+          else Response.throwValidationError(reject, 'password', 'password is not valid');
+        } else Response.throwValidationError(reject, 'username', 'username does not exist');
+      }, reject);
     });
   }
 
