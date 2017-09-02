@@ -37,3 +37,9 @@ npm start
 ```bash
 npm test
 ```
+
+### Screenshots
+
+![Login](screenshots/login.png?raw=true)
+![Signup](screenshots/signup.png?raw=true)
+![Dashboard](screenshots/dashboard.png?raw=true)
