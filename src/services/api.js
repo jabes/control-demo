@@ -1,6 +1,4 @@
-import config from '../../config'
-
-const API_URL = `http://${config.hapi.host}:${config.hapi.port}`;
+const API_URL = `https://${window.location.host}`;
 
 export const endpoints = {
   users: {

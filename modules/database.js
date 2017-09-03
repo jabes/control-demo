@@ -6,11 +6,15 @@ class Database {
 
   constructor() {
     this.conn = null;
-    this.config = require('../config');
+    this.config = {
+      host: "localhost",
+      port: 28015,
+      db: "control_demo"
+    };
   }
 
   connect() {
-    return Rethink.connect(this.config.rethinkdb)
+    return Rethink.connect(this.config)
       .then(conn => {
         console.log('Database connection initialized');
         this.conn = conn;
@@ -79,7 +83,7 @@ class Database {
     }));
   }
 
-  ensureDatabaseExists(db_name = this.config.rethinkdb.db) {
+  ensureDatabaseExists(db_name = this.config.db) {
     console.log(`Checking if database "${db_name}" exists..`);
     return Rethink
       .dbList()

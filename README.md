@@ -32,6 +32,14 @@ npm start
 - [Server](http://localhost:8000/)
 - [Database administration](http://localhost:8080/)
 
+Change `NODE_ENV` in `nodemon.json` from `development` to `production` in order to disable webpack middleware.
+You must also run `npm run build` to bundle required assets before you disable webpack.
+
+HTTP/2 and SSL encryption are both disabled by default, however it can be enabled with the following:
+1. Change `ENABLE_SSL` to `true` in `nodemon.json`
+2. Uncomment `http-tls-key` and `http-tls-cert` in `rethinkdb.conf`
+3. Run `./generate_keys.sh`
+
 ### Testing
 
 ```bash

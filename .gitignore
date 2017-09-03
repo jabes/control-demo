@@ -5,6 +5,7 @@
 !.gitignore
 !.npmrc
 
+keys/
 node_modules/
 rethinkdb_data/
 
