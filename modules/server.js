@@ -11,7 +11,7 @@ class Server {
     this.config = {
       host: process.env.HAPI_HOST,
       address: process.env.HAPI_ADDRESS,
-      port: process.env.HAPI_PORT,
+      port: process.env.PORT || process.env.HAPI_PORT,
     };
 
     if (process.env.ENABLE_SSL === 'true') {
