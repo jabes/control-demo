@@ -2,8 +2,6 @@
 
 const Hapi = require('hapi');
 const Inert = require('inert');
-const env = process.env.NODE_ENV;
-const ssl = process.env.ENABLE_SSL;
 
 class Server {
 
@@ -11,12 +9,12 @@ class Server {
     this.server = new Hapi.Server();
 
     this.config = {
-      host: "localhost",
-      address: "0.0.0.0",
-      port: 8000,
+      host: process.env.HAPI_HOST,
+      address: process.env.HAPI_ADDRESS,
+      port: process.env.HAPI_PORT,
     };
 
-    if (ssl === 'true') {
+    if (process.env.ENABLE_SSL === 'true') {
       const spdy = require('spdy');
       const fs = require('fs');
       this.config.tls = true;
@@ -52,7 +50,7 @@ class Server {
   }
 
   extend() {
-    if (env !== 'production') {
+    if (process.env.NODE_ENV !== 'production') {
       const Middleware = require('./middleware');
       const m = new Middleware(this.server);
       m.extendServerRequests();

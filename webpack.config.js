@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const env = process.env.NODE_ENV;
 
 let config = {
 
@@ -38,11 +37,10 @@ let config = {
 
 };
 
-if (env === 'development') {
+if (process.env.NODE_ENV === 'development') {
+  const HotModuleReplacementPlugin = new webpack.HotModuleReplacementPlugin();
+  config.plugins.push(HotModuleReplacementPlugin);
   config.entry.push('webpack-hot-middleware/client');
-  config.plugins.push(
-    new webpack.HotModuleReplacementPlugin(),
-  );
 }
 
 module.exports = config;

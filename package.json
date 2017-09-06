@@ -61,6 +61,7 @@
   "scripts": {
     "start": "nf start",
     "start-dev": "nf start --procfile ./Procfile_dev",
+    "start-db": "rethinkdb --config-file rethinkdb.conf",
     "build": "node build.js && webpack",
     "test": "mocha --reporter spec",
     "postinstall": "npm run build"
