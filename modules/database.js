@@ -7,16 +7,25 @@ class Database {
   constructor() {
     this.conn = null;
     this.config = {
-      host: "localhost",
-      port: 28015,
-      db: "control_demo"
+      host: process.env.RETHINK_HOST,
+      port: process.env.RETHINK_PORT,
+      db: process.env.RETHINK_DB,
+      user: process.env.RETHINK_USER,
+      password: process.env.RETHINK_PASSWORD,
     };
+    if (process.env.RETHINK_SSL_CERT) {
+      this.config.ssl = {
+        ca: [
+          Buffer.from(process.env.RETHINK_SSL_CERT, 'base64')
+        ]
+      };
+    }
   }
 
   connect() {
+    console.log('Connecting to database..');
     return Rethink.connect(this.config)
       .then(conn => {
-        console.log('Database connection initialized');
         this.conn = conn;
       })
       .error(error => {

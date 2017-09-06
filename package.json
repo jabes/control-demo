@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "bcrypt": "1.0.3",
-    "concurrently": "3.5.0",
+    "foreman": "2.0.0",
     "hapi": "16.5.2",
     "inert": "4.2.1",
     "joi": "10.6.0",
@@ -59,9 +59,10 @@
     "webpack-hot-middleware": "2.18.2"
   },
   "scripts": {
+    "start": "nf start",
+    "start-dev": "nf start --procfile ./Procfile_dev",
     "build": "node build.js && webpack",
-    "start-db": "rethinkdb --config-file rethinkdb.conf",
-    "start": "concurrently 'npm run start-db' nodemon",
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec",
+    "postinstall": "npm run build"
   }
 }

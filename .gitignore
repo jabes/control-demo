@@ -1,6 +1,7 @@
 **/.*
 !.babelrc
 !.editorconfig
+!.env
 !.eslintrc
 !.gitignore
 !.npmrc
