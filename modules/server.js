@@ -80,12 +80,19 @@ class Server {
     console.log('Defining server routes..');
     const routes = require('./routes');
     this.server.route(routes);
-    this.server.subscription('/todo/updates', {
-      filter: (path, message, options, next) => {
-        const todo = message.new_val || message.old_val;
-        return next(todo.user_id === options.credentials.id);
-      },
-    });
+  }
+
+  subscribe(database) {
+    console.log('Subscribing server to socket events..');
+    const filter = (path, message, options, next) => {
+      const row = message.new_val || message.old_val;
+      const id = row.user_id || row.id;
+      return next(id === options.credentials.id);
+    };
+    this.server.subscription('/todo/updates', {filter});
+    this.server.subscription('/user/updates', {filter});
+    database.subscribe('todos', '/todo/updates');
+    database.subscribe('users', '/user/updates');
   }
 
   extend() {

@@ -7,6 +7,7 @@ const state = {
   token: localStorage.getItem('access_token'),
   user: null,
   todos: [],
+  sockets: [],
 };
 
 const mutations = {
@@ -33,7 +34,7 @@ const mutations = {
     state.todos = todos;
   },
 
-  removeTodos(state) {
+  removeAllTodos(state) {
     state.todos = [];
   },
 
@@ -57,6 +58,14 @@ const mutations = {
         break;
       }
     }
+  },
+
+  addSocket(state, client) {
+    state.sockets.push(client);
+  },
+
+  removeAllSockets(state) {
+    state.sockets = [];
   },
 
 };

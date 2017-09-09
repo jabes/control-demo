@@ -32,9 +32,9 @@ database
             server.connect();
             server.register();
             server.route();
+            server.subscribe(database);
             server.extend();
             server.start();
-            database.subscribe('todos', '/todo/updates');
           });
       });
   });

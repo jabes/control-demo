@@ -1,47 +1,28 @@
-import Nes from 'nes/client';
+import Base from './base'
 import Auth from './auth'
 import {endpoints} from './api'
 
 export default {
 
-  app: null, // Vue
-  context: null, // VueComponent
-  router: null, // VueRouter
-  store: null, // VueStore
-  http: null,  // VueResource
+  ...Base,
 
-  setContext(context) {
-    this.context = context;
-    this.app = this.context.$root;
-    this.router = this.app.$router;
-    this.store = this.app.$store;
-    this.http = this.app.$http;
-  },
-
-  socketConnect(context) {
+  subscribe(context) {
     this.setContext(context);
-    const client = new Nes.Client(`ws://${window.location.host}`);
-    const authorization = `Bearer ${this.store.state.token}`;
-    const headers = {authorization};
-    const auth = {headers};
-    client.connect({auth}, err => {
-      if (err) console.error(err);
-      else {
-        client.subscribe(
-          '/todo/updates',
-          todo => {
-            const inserted = !todo.old_val && !!todo.new_val;
-            const updated = !!todo.old_val && !!todo.new_val;
-            const deleted = !!todo.old_val && !todo.new_val;
-            if (inserted) this.store.commit('addTodo', todo.new_val);
-            else if (updated) this.store.commit('updateTodo', todo.new_val);
-            else if (deleted) this.store.commit('removeTodo', todo.old_val);
-          },
-          err => {
-            if (err) console.error(err);
-          }
-        );
-      }
+    this.socketConnect().then(client => {
+      client.subscribe(
+        '/todo/updates',
+        message => {
+          const inserted = !message.old_val && !!message.new_val;
+          const updated = !!message.old_val && !!message.new_val;
+          const deleted = !!message.old_val && !message.new_val;
+          if (inserted) this.store.commit('addTodo', message.new_val);
+          else if (updated) this.store.commit('updateTodo', message.new_val);
+          else if (deleted) this.store.commit('removeTodo', message.old_val);
+        },
+        err => {
+          if (err) console.error(err);
+        },
+      );
     });
   },
 

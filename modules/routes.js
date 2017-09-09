@@ -62,8 +62,7 @@ module.exports = [
       auth: 'jwt',
     },
     handler: function (request, reply) {
-      User.logout(request.auth.credentials.id);
-      reply();
+      User.logout(request.auth.credentials.id).then(reply);
     }
   },
 

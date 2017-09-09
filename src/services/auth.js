@@ -1,21 +1,10 @@
 import decode from 'jwt-decode'
+import Base from './base'
 import {endpoints} from './api'
 
 export default {
 
-  app: null, // Vue
-  context: null, // VueComponent
-  router: null, // VueRouter
-  store: null, // VueStore
-  http: null,  // VueResource
-
-  setContext(context) {
-    this.context = context;
-    this.app = this.context.$root;
-    this.router = this.app.$router;
-    this.store = this.app.$store;
-    this.http = this.app.$http;
-  },
+  ...Base,
 
   setError(error = '') {
     this.context.error = error;
@@ -93,12 +82,11 @@ export default {
   logout() {
     const payload = {};
     const headers = {'Authorization': this.store.state.token};
-    return this.http.post(endpoints.users.logout, payload, {headers})
-      .then(() => {
-        this.store.commit('removeUser');
-        this.store.commit('removeToken');
-        this.store.commit('removeTodos');
-      });
+    this.http.post(endpoints.users.logout, payload, {headers});
+    this.disconnectAllSockets();
+    this.store.commit('removeUser');
+    this.store.commit('removeToken');
+    this.store.commit('removeAllTodos');
   },
 
   login(context, credentials, redirect) {

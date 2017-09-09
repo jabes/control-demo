@@ -61,6 +61,7 @@
 
 <script>
   import Todos from '../services/todos';
+  import Users from '../services/users';
 
   export default {
     data() {
@@ -74,8 +75,9 @@
       }
     },
     mounted() {
-      Todos.socketConnect(this);
       Todos.get(this);
+      Todos.subscribe(this);
+      Users.subscribe(this);
     },
     computed: {
       todos() {
