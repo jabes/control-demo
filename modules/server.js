@@ -1,6 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
+const Nes = require('nes');
 const Inert = require('inert');
 
 class Server {
@@ -11,7 +12,7 @@ class Server {
     this.config = {
       host: process.env.HAPI_HOST,
       address: process.env.HAPI_ADDRESS,
-      port: process.env.PORT || process.env.HAPI_PORT,
+      port: process.env.PORT,
     };
 
     if (process.env.ENABLE_SSL === 'true') {
@@ -36,21 +37,30 @@ class Server {
   }
 
   register() {
-
-    console.log('Providing static file and directory handlers..');
-    this.server.register(Inert, (err) => {
-      if (err) throw err;
+    console.log('Registering server plugins..');
+    return new Promise((resolve, reject) => {
+      const plugins = [Inert, Nes];
+      this.server.register(plugins, err => {
+        if (err) {
+          console.error('Failed to load a plugin:', err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
     });
+  }
 
+  route() {
     console.log('Defining server routes..');
-    this.server.route(
-      require('./routes')
-    );
-
+    const routes = require('./routes');
+    this.server.route(routes);
+    this.server.subscription('/todo/updates');
   }
 
   extend() {
     if (process.env.NODE_ENV !== 'production') {
+      console.log('Adding server middleware..');
       const Middleware = require('./middleware');
       const m = new Middleware(this.server);
       m.extendServerRequests();

@@ -37,8 +37,6 @@ class Middleware {
 
   extendServerRequests() {
 
-    console.log('Extending server requests..');
-
     this.server.ext('onRequest', (request, reply) => {
       const {req, res} = request.raw;
       this.devMiddleware(req, res, error => {

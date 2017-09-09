@@ -9,9 +9,10 @@ Vue.use(VueRouter);
 
 function requireAuth(to, from, next) {
   Auth.setContext(router.app);
-  const authenticated = Auth.isLoggedIn();
-  if (!authenticated) next({name: 'login'});
-  else next();
+  Auth.isLoggedIn(response => {
+    if (response.body.authenticated) next();
+    else next({name: 'login'});
+  });
 }
 
 const routes = [

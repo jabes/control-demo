@@ -43,6 +43,23 @@ module.exports = [
 
   {
     method: 'POST',
+    path: '/users/check',
+    config: {
+      validate: {
+        payload: {
+          token: Joi.string().required(),
+        }
+      }
+    },
+    handler: function (request, reply) {
+      const token = requireValidToken(request, reply);
+      const authenticated = !!token;
+      reply({authenticated});
+    }
+  },
+
+  {
+    method: 'POST',
     path: '/users/login',
     config: {
       validate: {
@@ -117,7 +134,12 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
-      Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
+      if (token) Todo
+        .getAll(token.user.id)
+        .then(
+          response => reply(response),
+          error => reply(error)
+        );
     }
   },
 
@@ -134,9 +156,12 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
-      Todo.insert(token.user.id, request.payload.message).then(() => {
-        Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
-      }, reply);
+      if (token) Todo
+        .insert(token.user.id, request.payload.message)
+        .then(
+          response => reply(response),
+          error => reply(error)
+        );
     }
   },
 
@@ -154,9 +179,12 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
-      Todo.update(request.payload.id, request.payload.data).then(() => {
-        Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
-      }, reply);
+      if (token) Todo
+        .update(request.payload.id, request.payload.data)
+        .then(
+          response => reply(response),
+          error => reply(error)
+        );
     }
   },
 
@@ -173,9 +201,12 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = requireValidToken(request, reply);
-      Todo.remove(request.payload.id).then(() => {
-        Todo.getAll(token.user.id).then(todos => reply({todos}), reply);
-      }, reply);
+      if (token) Todo
+        .remove(request.payload.id)
+        .then(
+          response => reply(response),
+          error => reply(error)
+        );
     }
   },
 

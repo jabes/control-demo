@@ -2,6 +2,7 @@ const API_URL = `//${window.location.host}`;
 
 export const endpoints = {
   users: {
+    check: `${API_URL}/users/check`,
     login: `${API_URL}/users/login`,
     signup: `${API_URL}/users/create`,
   },

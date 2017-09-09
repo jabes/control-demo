@@ -74,6 +74,7 @@
       }
     },
     mounted() {
+      Todos.socketConnect(this);
       Todos.get(this);
     },
     computed: {

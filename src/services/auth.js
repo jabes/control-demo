@@ -126,7 +126,7 @@ export default {
     return (exp - now) < 0;
   },
 
-  isLoggedIn() {
+  isLoggedIn(callback) {
     const token = this.store.state.token;
     if (token) {
       const decoded = decode(token);
@@ -135,6 +135,7 @@ export default {
       else {
         // get user info from access token on page load
         this.store.commit('setUser', decoded.user);
+        this.http.post(endpoints.users.check, {token}).then(callback);
         return true;
       }
     }

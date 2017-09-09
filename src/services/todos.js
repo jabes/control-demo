@@ -1,3 +1,4 @@
+import Nes from 'nes/client';
 import Auth from './auth'
 import {endpoints} from './api'
 
@@ -17,14 +18,28 @@ export default {
     this.http = this.app.$http;
   },
 
-  handleSuccess(response) {
-    Auth.checkTokenResponse(response);
-    let todos = this.app.objectResolvePath(response, 'body.todos');
-    if (todos) this.store.commit('setTodos', todos);
-  },
-
-  handleFailure(response) {
-    Auth.checkTokenResponse(response);
+  socketConnect(context) {
+    this.setContext(context);
+    const client = new Nes.Client(`ws://${window.location.host}`);
+    client.connect(err => {
+      if (err) console.error(err);
+      else {
+        client.subscribe(
+          '/todo/updates',
+          todo => {
+            const inserted = !todo.old_val && !!todo.new_val;
+            const updated = !!todo.old_val && !!todo.new_val;
+            const deleted = !!todo.old_val && !todo.new_val;
+            if (inserted) this.store.commit('addTodo', todo.new_val);
+            else if (updated) this.store.commit('updateTodo', todo.new_val);
+            else if (deleted) this.store.commit('removeTodo', todo.old_val);
+          },
+          err => {
+            if (err) console.error(err);
+          }
+        );
+      }
+    });
   },
 
   get(context) {
@@ -34,11 +49,11 @@ export default {
     };
     return this.http.post(endpoints.todos.get, payload)
       .then(
-        response => this.handleSuccess(response),
-        response => this.handleFailure(response)
-      )
-      .catch(
-        error => this.handleFailure(error)
+        response => {
+          Auth.checkTokenResponse(response);
+          this.store.commit('setTodos', response.body);
+        },
+        response => Auth.checkTokenResponse(response)
       );
   },
 
@@ -50,11 +65,8 @@ export default {
     };
     return this.http.post(endpoints.todos.insert, payload)
       .then(
-        response => this.handleSuccess(response),
-        response => this.handleFailure(response)
-      )
-      .catch(
-        error => this.handleFailure(error)
+        response => Auth.checkTokenResponse(response),
+        response => Auth.checkTokenResponse(response)
       );
   },
 
@@ -67,11 +79,8 @@ export default {
     };
     return this.http.post(endpoints.todos.update, payload)
       .then(
-        response => this.handleSuccess(response),
-        response => this.handleFailure(response)
-      )
-      .catch(
-        error => this.handleFailure(error)
+        response => Auth.checkTokenResponse(response),
+        response => Auth.checkTokenResponse(response)
       );
   },
 
@@ -83,11 +92,8 @@ export default {
     };
     return this.http.post(endpoints.todos.remove, payload)
       .then(
-        response => this.handleSuccess(response),
-        response => this.handleFailure(response)
-      )
-      .catch(
-        error => this.handleFailure(error)
+        response => Auth.checkTokenResponse(response),
+        response => Auth.checkTokenResponse(response)
       );
   },
 

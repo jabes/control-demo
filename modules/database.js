@@ -4,8 +4,9 @@ const Rethink = require('rethinkdb');
 
 class Database {
 
-  constructor() {
+  constructor(server) {
     this.conn = null;
+    this.server = server;
     this.config = {
       host: process.env.RETHINK_HOST,
       port: process.env.RETHINK_PORT,
@@ -165,11 +166,29 @@ class Database {
   getAll(table_name, key, index = 'id') {
     return Rethink
       .table(table_name)
-      .getAll(key, {index: index})
+      .getAll(key, {index})
       .coerceTo('array')
       .run(this.conn)
       .error(error => {
         console.error(`Failed to retrieve record ${index}:${key}`);
+        console.error(error.message);
+        process.exit(1);
+      });
+  }
+
+  subscribe(table_name, path) {
+    return Rethink
+      .table(table_name)
+      .changes()
+      .run(this.conn)
+      .then(cursor => {
+        cursor.each((err, item) => {
+          if (err) console.error(err);
+          else this.server.publish(path, item);
+        });
+      })
+      .error(error => {
+        console.error(`Failed to retrieve record ${key}`);
         console.error(error.message);
         process.exit(1);
       });

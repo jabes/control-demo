@@ -4,7 +4,7 @@ const Server = require('./modules/server');
 const Database = require('./modules/database');
 
 const server = new Server();
-const database = new Database();
+const database = new Database(server.server);
 
 global.server = server;
 global.database = database;
@@ -30,9 +30,12 @@ database
           .ensureTablesExist(tables)
           .then(() => {
             server.connect();
-            server.register();
-            server.extend();
-            server.start();
+            server.register().then(()=>{
+              server.route();
+              server.extend();
+              server.start();
+              database.subscribe('todos', '/todo/updates');
+            });
           });
       });
   });
