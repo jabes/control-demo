@@ -1,5 +1,4 @@
 import Base from './base'
-import Auth from './auth'
 import {endpoints} from './api'
 
 export default {
@@ -30,42 +29,26 @@ export default {
     const headers = {'Authorization': this.store.state.token};
     return this.http.post(endpoints.todos.get, payload, {headers})
       .then(
-        response => {
-          Auth.checkTokenResponse(response);
-          this.store.commit('setTodos', response.body);
-        },
-        response => Auth.checkTokenResponse(response)
+        response => this.store.commit('setTodos', response.body)
       );
   },
 
   insert(message) {
     const payload = {message};
     const headers = {'Authorization': this.store.state.token};
-    return this.http.post(endpoints.todos.insert, payload, {headers})
-      .then(
-        response => Auth.checkTokenResponse(response),
-        response => Auth.checkTokenResponse(response)
-      );
+    return this.http.post(endpoints.todos.insert, payload, {headers});
   },
 
-  update(id, data = {}) {
+  update(id, data) {
     const payload = {id, data};
     const headers = {'Authorization': this.store.state.token};
-    return this.http.post(endpoints.todos.update, payload, {headers})
-      .then(
-        response => Auth.checkTokenResponse(response),
-        response => Auth.checkTokenResponse(response)
-      );
+    return this.http.post(endpoints.todos.update, payload, {headers});
   },
 
   remove(id) {
     const payload = {id};
     const headers = {'Authorization': this.store.state.token};
-    return this.http.post(endpoints.todos.remove, payload, {headers})
-      .then(
-        response => Auth.checkTokenResponse(response),
-        response => Auth.checkTokenResponse(response)
-      );
+    return this.http.post(endpoints.todos.remove, payload, {headers});
   },
 
 }

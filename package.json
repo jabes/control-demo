@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "bcrypt": "1.0.3",
+    "boom": "5.2.0",
     "foreman": "2.0.0",
     "hapi": "16.5.2",
     "hapi-auth-jwt2": "7.3.0",

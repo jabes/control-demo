@@ -40,43 +40,21 @@ export default {
     this.context.errors = {};
   },
 
-  checkTokenResponse(response) {
-    let error = this.app.objectResolvePath(response, 'body.error');
-    if (error) {
-      let code = this.app.objectResolvePath(response, 'body.code');
-      let message = this.app.objectResolvePath(response, 'body.message');
-      if (code === 'tokenInvalid') {
-        this.logout();
-        console.error(message);
-        this.router.push({name: 'login'});
-      }
-    }
-  },
-
-  handleResponseErrors(response) {
-    this.clearError();
-    this.clearErrors();
-    const error = this.app.objectResolvePath(response, 'body.message');
-    const errors = this.app.objectResolvePath(response, 'body.validation.errors');
-    if (errors) this.setErrors(errors);
-    else if (error) this.setError(error);
-  },
-
   handleAuthSuccess(response, redirect) {
-    this.handleResponseErrors(response);
-    const authenticated = this.app.objectResolvePath(response, 'body.authenticated');
-    if (authenticated) {
-      const token = this.app.objectResolvePath(response, 'body.access_token');
-      const user = this.app.objectResolvePath(response, 'body.user');
-      this.store.commit('setToken', token);
-      this.store.commit('setUser', user);
+    if (response.body.authenticated) {
+      this.store.commit('setToken', response.body.access_token);
+      this.store.commit('setUser', response.body.user);
       if (redirect) this.router.push(redirect);
     }
   },
 
   handleAuthFailure(response) {
-    this.handleResponseErrors(response);
-    this.logout();
+    this.clearError();
+    this.clearErrors();
+    const error = response.body.message;
+    const errors = response.body.validation.errors;
+    if (errors) this.setErrors(errors);
+    else if (error) this.setError(error);
   },
 
   logout() {
@@ -93,10 +71,7 @@ export default {
     return this.http.post(endpoints.users.login, credentials)
       .then(
         response => this.handleAuthSuccess(response, redirect),
-        response => this.handleAuthFailure(response)
-      )
-      .catch(
-        error => this.handleAuthFailure(error)
+        response => this.handleAuthFailure(response),
       );
   },
 
@@ -104,10 +79,7 @@ export default {
     return this.http.post(endpoints.users.signup, credentials)
       .then(
         response => this.handleAuthSuccess(response, redirect),
-        response => this.handleAuthFailure(response)
-      )
-      .catch(
-        error => this.handleAuthFailure(error)
+        response => this.handleAuthFailure(response),
       );
   },
 

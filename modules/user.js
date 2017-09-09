@@ -1,9 +1,17 @@
 'use strict';
 
+const Boom = require('boom');
 const Auth = require('./auth');
-const Response = require('./response');
 const db = global.database;
 const table = 'users';
+
+const validationError = (key, message) => {
+  const errors = [{key, message}];
+  const validation = {errors};
+  const error = Boom.badRequest(message, {validation});
+  error.output.payload.validation = error.data.validation;
+  return error;
+};
 
 class User {
 
@@ -41,7 +49,7 @@ class User {
   static create(username, password, full_name) {
     return new Promise((resolve, reject) => {
       User.byUsername(username).then(user => {
-        if (user) Response.throwValidationError(reject, 'username', 'this username is taken');
+        if (user) reject(validationError('username', 'this username is taken'));
         const password_hash = Auth.hashPassword(password);
         const mock = {
           username,
@@ -64,8 +72,8 @@ class User {
         if (user) {
           const valid = Auth.verifyPassword(password, user.password_hash);
           if (valid) resolve(user);
-          else Response.throwValidationError(reject, 'password', 'password is not valid');
-        } else Response.throwValidationError(reject, 'username', 'username does not exist');
+          else reject(validationError('password', 'password is not valid'));
+        } else reject(validationError('username', 'username does not exist'));
       }, reject);
     });
   }

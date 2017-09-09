@@ -3,7 +3,6 @@
 const Joi = require('joi');
 const Relish = require('relish');
 const Auth = require('./auth');
-const Response = require('./response');
 const User = require('./user');
 const Todo = require('./todo');
 const webpackConfig = require('../webpack.config');
@@ -45,13 +44,15 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = request.payload.token;
-      if (!token) Response.throwError(reply, 'tokenRequired', 'Token is required');
       const decoded = Auth.verifyToken(token);
-      if (!decoded) Response.throwError(reply, 'tokenInvalid', 'Token is not valid');
-      User.get(decoded.user.id).then(user => {
-        const authenticated = user.token === token;
-        reply({authenticated});
-      });
+      if (decoded) {
+        User.get(decoded.user.id).then(
+          user => reply({authenticated: user.token === token}),
+          error => reply({authenticated: false, error}),
+        );
+      } else {
+        reply({authenticated: false});
+      }
     }
   },
 
@@ -87,19 +88,12 @@ module.exports = [
         payload.username,
         payload.password,
       ).then(
-        user => {
-          reply({
-            authenticated: true,
-            access_token: user.token,
-            user: User.safe(user),
-          });
-        },
-        error => {
-          reply({
-            authenticated: false,
-            ...error,
-          });
-        },
+        user => reply({
+          authenticated: true,
+          access_token: user.token,
+          user: User.safe(user),
+        }),
+        error => reply(error),
       );
     }
   },
@@ -128,19 +122,12 @@ module.exports = [
         payload.password,
         payload.full_name,
       ).then(
-        user => {
-          reply({
-            authenticated: true,
-            access_token: user.token,
-            user: User.safe(user),
-          });
-        },
-        error => {
-          reply({
-            authenticated: false,
-            ...error,
-          });
-        },
+        user => reply({
+          authenticated: true,
+          access_token: user.token,
+          user: User.safe(user),
+        }),
+        error => reply(error),
       );
     }
   },
