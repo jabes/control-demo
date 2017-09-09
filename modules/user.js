@@ -15,6 +15,14 @@ class User {
     };
   }
 
+  static refreshToken(user) {
+    return new Promise((resolve, reject) => {
+      const safe = User.safe(user);
+      user.token = Auth.generateToken(safe);
+      db.update(table, user.id, user).then(resolve(user), reject);
+    });
+  }
+
   static get(username) {
     return new Promise((resolve, reject) => {
       db
@@ -40,29 +48,29 @@ class User {
           db.insert(table, mock).then(response => {
             const key = response.generated_keys[0];
             db.get(table, key).then(user => {
-              User.refreshToken(user).then(user => resolve(user), reject);
+              User.refreshToken(user).then(resolve, reject);
             }, reject);
           }, reject);
         }, reject);
     });
   }
 
-  static refreshToken(user) {
+  static verify(username, password) {
     return new Promise((resolve, reject) => {
-      const safe = User.safe(user);
-      user.token = Auth.generateToken(safe);
-      db.update(table, user.id, user).then(resolve(user), reject);
+      User.get(username).then(user => {
+        if (user) {
+          const valid = Auth.verifyPassword(password, user.password_hash);
+          if (valid) resolve(user);
+          else Response.throwValidationError(reject, 'password', 'password is not valid');
+        } else Response.throwValidationError(reject, 'username', 'username does not exist');
+      }, reject);
     });
   }
 
   static login(username, password) {
     return new Promise((resolve, reject) => {
-      User.get(username).then(user => {
-        if (user) {
-          const valid = Auth.verifyPassword(password, user.password_hash);
-          if (valid) User.refreshToken(user).then(user => resolve(user), reject);
-          else Response.throwValidationError(reject, 'password', 'password is not valid');
-        } else Response.throwValidationError(reject, 'username', 'username does not exist');
+      User.verify(username, password).then(user => {
+        User.refreshToken(user).then(resolve, reject)
       }, reject);
     });
   }

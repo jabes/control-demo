@@ -13,14 +13,6 @@ const relish = Relish({
   messages: {},
 });
 
-function requireValidToken(request, reply) {
-  const token = request.payload.token;
-  if (!token) Response.throwError(reply, 'tokenRequired', 'A valid token is required');
-  const decoded = Auth.verifyToken(request.payload.token);
-  if (!decoded) Response.throwError(reply, 'tokenInvalid', 'Provided token is not valid');
-  return decoded;
-}
-
 module.exports = [
 
   {
@@ -52,8 +44,11 @@ module.exports = [
       }
     },
     handler: function (request, reply) {
-      const token = requireValidToken(request, reply);
-      const authenticated = !!token;
+      const token = request.payload.token;
+      if (!token) Response.throwError(reply, 'tokenRequired', 'Token is required');
+      const decoded = Auth.verifyToken(token);
+      if (!decoded) Response.throwError(reply, 'tokenInvalid', 'Token is not valid');
+      const authenticated = !!decoded;
       reply({authenticated});
     }
   },
@@ -75,17 +70,24 @@ module.exports = [
     },
     handler: function (request, reply) {
       const payload = request.payload;
-      User.login(payload.username, payload.password).then(user => {
-        reply({
-          authenticated: true,
-          access_token: user.token,
-          user: User.safe(user),
-        });
-      }, error => {
-        reply(Object.assign({
-          authenticated: false,
-        }, error));
-      });
+      User.login(
+        payload.username,
+        payload.password,
+      ).then(
+        user => {
+          reply({
+            authenticated: true,
+            access_token: user.token,
+            user: User.safe(user),
+          });
+        },
+        error => {
+          reply({
+            authenticated: false,
+            ...error,
+          });
+        },
+      );
     }
   },
 
@@ -108,17 +110,25 @@ module.exports = [
     },
     handler: function (request, reply) {
       const payload = request.payload;
-      User.create(payload.username, payload.password, payload.full_name).then(user => {
-        reply({
-          authenticated: true,
-          access_token: user.token,
-          user: User.safe(user),
-        });
-      }, error => {
-        reply(Object.assign({
-          authenticated: false,
-        }, error));
-      });
+      User.create(
+        payload.username,
+        payload.password,
+        payload.full_name,
+      ).then(
+        user => {
+          reply({
+            authenticated: true,
+            access_token: user.token,
+            user: User.safe(user),
+          });
+        },
+        error => {
+          reply({
+            authenticated: false,
+            ...error,
+          });
+        },
+      );
     }
   },
 
@@ -126,20 +136,15 @@ module.exports = [
     method: 'POST',
     path: '/todos/get',
     config: {
-      validate: {
-        payload: {
-          token: Joi.string().required(),
-        }
-      }
+      auth: 'jwt',
     },
     handler: function (request, reply) {
-      const token = requireValidToken(request, reply);
-      if (token) Todo
-        .getAll(token.user.id)
-        .then(
-          response => reply(response),
-          error => reply(error)
-        );
+      Todo.getAll(
+        request.auth.credentials.id,
+      ).then(
+        response => reply(response),
+        error => reply(error),
+      );
     }
   },
 
@@ -147,21 +152,21 @@ module.exports = [
     method: 'POST',
     path: '/todos/insert',
     config: {
+      auth: 'jwt',
       validate: {
         payload: {
-          token: Joi.string().required(),
           message: Joi.string().required(),
         }
       }
     },
     handler: function (request, reply) {
-      const token = requireValidToken(request, reply);
-      if (token) Todo
-        .insert(token.user.id, request.payload.message)
-        .then(
-          response => reply(response),
-          error => reply(error)
-        );
+      Todo.insert(
+        request.auth.credentials.id,
+        request.payload.message,
+      ).then(
+        response => reply(response),
+        error => reply(error),
+      );
     }
   },
 
@@ -169,22 +174,22 @@ module.exports = [
     method: 'POST',
     path: '/todos/update',
     config: {
+      auth: 'jwt',
       validate: {
         payload: {
-          token: Joi.string().required(),
           id: Joi.string().required(),
           data: Joi.object().required(),
         }
       }
     },
     handler: function (request, reply) {
-      const token = requireValidToken(request, reply);
-      if (token) Todo
-        .update(request.payload.id, request.payload.data)
-        .then(
-          response => reply(response),
-          error => reply(error)
-        );
+      Todo.update(
+        request.payload.id,
+        request.payload.data,
+      ).then(
+        response => reply(response),
+        error => reply(error),
+      );
     }
   },
 
@@ -192,21 +197,20 @@ module.exports = [
     method: 'POST',
     path: '/todos/remove',
     config: {
+      auth: 'jwt',
       validate: {
         payload: {
-          token: Joi.string().required(),
           id: Joi.string().required(),
         }
       }
     },
     handler: function (request, reply) {
-      const token = requireValidToken(request, reply);
-      if (token) Todo
-        .remove(request.payload.id)
-        .then(
-          response => reply(response),
-          error => reply(error)
-        );
+      Todo.remove(
+        request.payload.id,
+      ).then(
+        response => reply(response),
+        error => reply(error),
+      );
     }
   },
 

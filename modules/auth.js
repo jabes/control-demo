@@ -3,6 +3,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const secret = process.env.JWT_SECRET;
+const algorithm = process.env.JWT_ALGORITHM;
 
 class Auth {
 
@@ -14,7 +15,7 @@ class Auth {
       exp: expires,
       user,
     };
-    return jwt.sign(payload, secret);
+    return jwt.sign(payload, secret, {algorithm});
   }
 
   static hashPassword(password) {
@@ -29,7 +30,7 @@ class Auth {
   static verifyToken(token) {
     let decoded = false;
     try {
-      decoded = jwt.verify(token, secret);
+      decoded = jwt.verify(token, secret, {algorithm});
     } catch (e) {
       decoded = false; // still false
     }

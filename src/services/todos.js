@@ -21,7 +21,10 @@ export default {
   socketConnect(context) {
     this.setContext(context);
     const client = new Nes.Client(`ws://${window.location.host}`);
-    client.connect(err => {
+    const authorization = `Bearer ${this.store.state.token}`;
+    const headers = {authorization};
+    const auth = {headers};
+    client.connect({auth}, err => {
       if (err) console.error(err);
       else {
         client.subscribe(
@@ -44,10 +47,9 @@ export default {
 
   get(context) {
     this.setContext(context);
-    const payload = {
-      token: this.store.state.token,
-    };
-    return this.http.post(endpoints.todos.get, payload)
+    const payload = {};
+    const headers = {'Authorization': this.store.state.token};
+    return this.http.post(endpoints.todos.get, payload, {headers})
       .then(
         response => {
           Auth.checkTokenResponse(response);
@@ -59,11 +61,9 @@ export default {
 
   insert(context, message) {
     this.setContext(context);
-    const payload = {
-      token: this.store.state.token,
-      message,
-    };
-    return this.http.post(endpoints.todos.insert, payload)
+    const payload = {message};
+    const headers = {'Authorization': this.store.state.token};
+    return this.http.post(endpoints.todos.insert, payload, {headers})
       .then(
         response => Auth.checkTokenResponse(response),
         response => Auth.checkTokenResponse(response)
@@ -72,12 +72,9 @@ export default {
 
   update(context, id, data = {}) {
     this.setContext(context);
-    const payload = {
-      token: this.store.state.token,
-      id,
-      data,
-    };
-    return this.http.post(endpoints.todos.update, payload)
+    const payload = {id, data};
+    const headers = {'Authorization': this.store.state.token};
+    return this.http.post(endpoints.todos.update, payload, {headers})
       .then(
         response => Auth.checkTokenResponse(response),
         response => Auth.checkTokenResponse(response)
@@ -86,11 +83,9 @@ export default {
 
   remove(context, id) {
     this.setContext(context);
-    const payload = {
-      token: this.store.state.token,
-      id,
-    };
-    return this.http.post(endpoints.todos.remove, payload)
+    const payload = {id};
+    const headers = {'Authorization': this.store.state.token};
+    return this.http.post(endpoints.todos.remove, payload, {headers})
       .then(
         response => Auth.checkTokenResponse(response),
         response => Auth.checkTokenResponse(response)

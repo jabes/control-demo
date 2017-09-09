@@ -1,8 +1,6 @@
 'use strict';
 
 const Hapi = require('hapi');
-const Nes = require('nes');
-const Inert = require('inert');
 
 class Server {
 
@@ -36,18 +34,45 @@ class Server {
     this.server.connection(this.config);
   }
 
+  loadPlugin(name, options = {}) {
+    console.log(`Loading server plugin: ${name}`);
+    return new Promise((resolve, reject) => {
+      this.server.register({
+        register: require(name),
+        options,
+      }, err => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+  }
+
+  setAuthStrategy() {
+    console.log('Setting server auth strategy..');
+    this.server.auth.strategy('jwt', 'jwt', {
+      key: process.env.JWT_SECRET,
+      validateFunc: (decoded, request, callback) => {
+        const isValid = !!decoded;
+        callback(null, isValid, decoded.user);
+      },
+      verifyOptions: {
+        algorithms: [
+          process.env.JWT_ALGORITHM
+        ]
+      },
+    });
+  }
+
   register() {
     console.log('Registering server plugins..');
-    return new Promise((resolve, reject) => {
-      const plugins = [Inert, Nes];
-      this.server.register(plugins, err => {
-        if (err) {
-          console.error('Failed to load a plugin:', err);
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+    this.loadPlugin('inert');
+    this.loadPlugin('hapi-auth-jwt2');
+    this.setAuthStrategy();
+    this.loadPlugin('nes', {
+      auth: {
+        type: 'direct',
+        route: 'jwt',
+      },
     });
   }
 
@@ -55,7 +80,12 @@ class Server {
     console.log('Defining server routes..');
     const routes = require('./routes');
     this.server.route(routes);
-    this.server.subscription('/todo/updates');
+    this.server.subscription('/todo/updates', {
+      filter: (path, message, options, next) => {
+        const todo = message.new_val || message.old_val;
+        return next(todo.user_id === options.credentials.id);
+      },
+    });
   }
 
   extend() {
