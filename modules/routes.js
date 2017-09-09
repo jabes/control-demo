@@ -47,7 +47,10 @@ module.exports = [
       const decoded = Auth.verifyToken(token);
       if (decoded) {
         User.get(decoded.user.id).then(
-          user => reply({authenticated: user.token === token}),
+          user => reply({
+            authenticated: user.token === token,
+            user: User.safe(user),
+          }),
           error => reply({authenticated: false, error}),
         );
       } else {

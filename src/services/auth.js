@@ -58,13 +58,16 @@ export default {
   },
 
   logout() {
-    const payload = {};
-    const headers = {'Authorization': this.store.state.token};
-    this.http.post(endpoints.users.logout, payload, {headers});
+    const token = this.store.state.token;
     this.disconnectAllSockets();
     this.store.commit('removeUser');
     this.store.commit('removeToken');
     this.store.commit('removeAllTodos');
+    if (token) {
+      const payload = {};
+      const headers = {'Authorization': token};
+      this.http.post(endpoints.users.logout, payload, {headers});
+    }
   },
 
   login(credentials, redirect) {
@@ -93,16 +96,19 @@ export default {
     const token = this.store.state.token;
     if (token) {
       const decoded = decode(token);
-      const expired = this.isTokenExpired(decoded);
-      if (expired) return false;
-      else {
-        // get user info from access token on page load
-        this.store.commit('setUser', decoded.user);
-        this.http.post(endpoints.users.check, {token}).then(callback);
-        return true;
-      }
-    }
-    return false;
+      if (decoded) {
+        const expired = this.isTokenExpired(decoded);
+        if (!expired) {
+          this.http.post(endpoints.users.check, {token})
+            .then(response => {
+              if (response.body.authenticated) {
+                this.store.commit('setUser', response.body.user);
+                callback(true);
+              } else callback(false);
+            });
+        } else callback(false);
+      } else callback(false);
+    } else callback(false);
   },
 
 }

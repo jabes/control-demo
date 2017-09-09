@@ -18,10 +18,7 @@ const routes = [
     component: Dashboard,
     beforeEnter: (to, from, next) => {
       Auth.setContext(router.app);
-      Auth.isLoggedIn(response => {
-        if (response.body.authenticated) next();
-        else next({name: 'logout'});
-      });
+      Auth.isLoggedIn(loggedIn => next(!loggedIn ? {name: 'logout'} : true));
     },
   },
   {
