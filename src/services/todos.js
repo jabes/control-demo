@@ -6,8 +6,7 @@ export default {
 
   ...Base,
 
-  subscribe(context) {
-    this.setContext(context);
+  subscribe() {
     this.socketConnect().then(client => {
       client.subscribe(
         '/todo/updates',
@@ -26,8 +25,7 @@ export default {
     });
   },
 
-  get(context) {
-    this.setContext(context);
+  get() {
     const payload = {};
     const headers = {'Authorization': this.store.state.token};
     return this.http.post(endpoints.todos.get, payload, {headers})
@@ -40,8 +38,7 @@ export default {
       );
   },
 
-  insert(context, message) {
-    this.setContext(context);
+  insert(message) {
     const payload = {message};
     const headers = {'Authorization': this.store.state.token};
     return this.http.post(endpoints.todos.insert, payload, {headers})
@@ -51,8 +48,7 @@ export default {
       );
   },
 
-  update(context, id, data = {}) {
-    this.setContext(context);
+  update(id, data = {}) {
     const payload = {id, data};
     const headers = {'Authorization': this.store.state.token};
     return this.http.post(endpoints.todos.update, payload, {headers})
@@ -62,8 +58,7 @@ export default {
       );
   },
 
-  remove(context, id) {
-    this.setContext(context);
+  remove(id) {
     const payload = {id};
     const headers = {'Authorization': this.store.state.token};
     return this.http.post(endpoints.todos.remove, payload, {headers})

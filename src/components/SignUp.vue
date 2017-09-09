@@ -70,10 +70,14 @@
         },
       }
     },
+    mounted() {
+      Auth.setContext(this);
+    },
     methods: {
       submit() {
+        const credentials = this.credentials;
         const redirect = {name: 'dashboard'};
-        Auth.signup(this, this.credentials, redirect);
+        Auth.signup(credentials, redirect);
       }
     }
   }

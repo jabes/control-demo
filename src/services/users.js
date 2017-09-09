@@ -5,14 +5,12 @@ export default {
 
   ...Base,
 
-  subscribe(context) {
-    this.setContext(context);
+  subscribe() {
     this.socketConnect().then(client => {
       client.subscribe(
         '/user/updates',
         message => {
           if (!message.new_val.token) {
-            Auth.setContext(context);
             Auth.logout();
             this.router.push({name: 'login'});
           }

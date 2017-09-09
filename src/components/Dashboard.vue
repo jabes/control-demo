@@ -75,9 +75,11 @@
       }
     },
     mounted() {
-      Todos.get(this);
-      Todos.subscribe(this);
-      Users.subscribe(this);
+      Todos.setContext(this);
+      Todos.subscribe();
+      Todos.get();
+      Users.setContext(this);
+      Users.subscribe();
     },
     computed: {
       todos() {
@@ -89,15 +91,15 @@
     },
     methods: {
       add(message) {
-        if (message.length > 0) Todos.insert(this, message);
+        if (message.length > 0) Todos.insert(message);
         this.todo.message = '';
       },
       remove(id) {
-        Todos.remove(this, id);
+        Todos.remove(id);
       },
       toggle(id, completed) {
         const data = {completed: !completed};
-        Todos.update(this, id, data);
+        Todos.update(id, data);
       },
     },
   }

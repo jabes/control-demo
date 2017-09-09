@@ -89,8 +89,7 @@ export default {
     this.store.commit('removeAllTodos');
   },
 
-  login(context, credentials, redirect) {
-    this.setContext(context);
+  login(credentials, redirect) {
     return this.http.post(endpoints.users.login, credentials)
       .then(
         response => this.handleAuthSuccess(response, redirect),
@@ -101,8 +100,7 @@ export default {
       );
   },
 
-  signup(context, credentials, redirect) {
-    this.setContext(context);
+  signup(credentials, redirect) {
     return this.http.post(endpoints.users.signup, credentials)
       .then(
         response => this.handleAuthSuccess(response, redirect),

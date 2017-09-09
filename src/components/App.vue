@@ -6,6 +6,7 @@
 </template>
 
 <script>
+  // nothing here..
 </script>
 
 <style lang="stylus">

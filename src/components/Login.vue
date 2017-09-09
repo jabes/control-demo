@@ -52,10 +52,14 @@
         },
       }
     },
+    mounted() {
+      Auth.setContext(this);
+    },
     methods: {
       submit() {
+        const credentials = this.credentials;
         const redirect = {name: 'dashboard'};
-        Auth.login(this, this.credentials, redirect);
+        Auth.login(credentials, redirect);
       }
     }
   }
