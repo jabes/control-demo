@@ -2,6 +2,8 @@
 
 This is a simple todo app built with Node, Vue, and RethinkDB.
 
+It uses `WebSockets` to push real time updates to the browser.
+
 ### Requirements
 
 - [Node.js](https://nodejs.org/en/download/)

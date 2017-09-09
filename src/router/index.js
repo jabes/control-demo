@@ -7,14 +7,6 @@ import Auth from '../services/auth';
 
 Vue.use(VueRouter);
 
-function requireAuth(to, from, next) {
-  Auth.setContext(router.app);
-  Auth.isLoggedIn(response => {
-    if (response.body.authenticated) next();
-    else next({name: 'login'});
-  });
-}
-
 const routes = [
   {
     path: '/',
@@ -24,7 +16,13 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: Dashboard,
-    beforeEnter: requireAuth,
+    beforeEnter: (to, from, next) => {
+      Auth.setContext(router.app);
+      Auth.isLoggedIn(response => {
+        if (response.body.authenticated) next();
+        else next({name: 'logout'});
+      });
+    },
   },
   {
     path: '/login',

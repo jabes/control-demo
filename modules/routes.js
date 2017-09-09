@@ -48,8 +48,22 @@ module.exports = [
       if (!token) Response.throwError(reply, 'tokenRequired', 'Token is required');
       const decoded = Auth.verifyToken(token);
       if (!decoded) Response.throwError(reply, 'tokenInvalid', 'Token is not valid');
-      const authenticated = !!decoded;
-      reply({authenticated});
+      User.get(decoded.user.id).then(user => {
+        const authenticated = user.token === token;
+        reply({authenticated});
+      });
+    }
+  },
+
+  {
+    method: 'POST',
+    path: '/users/logout',
+    config: {
+      auth: 'jwt',
+    },
+    handler: function (request, reply) {
+      User.logout(request.auth.credentials.id);
+      reply();
     }
   },
 

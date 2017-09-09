@@ -23,7 +23,11 @@ class User {
     });
   }
 
-  static get(username) {
+  static get(id) {
+    return db.get(table, id);
+  }
+
+  static byUsername(username) {
     return new Promise((resolve, reject) => {
       db
         .getAll(table, username, 'username')
@@ -36,28 +40,27 @@ class User {
 
   static create(username, password, full_name) {
     return new Promise((resolve, reject) => {
-      User.get(username)
-        .then(user => {
-          if (user) Response.throwValidationError(reject, 'username', 'this username is taken');
-          const password_hash = Auth.hashPassword(password);
-          const mock = {
-            username,
-            password_hash,
-            full_name,
-          };
-          db.insert(table, mock).then(response => {
-            const key = response.generated_keys[0];
-            db.get(table, key).then(user => {
-              User.refreshToken(user).then(resolve, reject);
-            }, reject);
+      User.byUsername(username).then(user => {
+        if (user) Response.throwValidationError(reject, 'username', 'this username is taken');
+        const password_hash = Auth.hashPassword(password);
+        const mock = {
+          username,
+          password_hash,
+          full_name,
+        };
+        db.insert(table, mock).then(response => {
+          const key = response.generated_keys[0];
+          db.get(table, key).then(user => {
+            User.refreshToken(user).then(resolve, reject);
           }, reject);
         }, reject);
+      }, reject);
     });
   }
 
   static verify(username, password) {
     return new Promise((resolve, reject) => {
-      User.get(username).then(user => {
+      User.byUsername(username).then(user => {
         if (user) {
           const valid = Auth.verifyPassword(password, user.password_hash);
           if (valid) resolve(user);
@@ -70,9 +73,14 @@ class User {
   static login(username, password) {
     return new Promise((resolve, reject) => {
       User.verify(username, password).then(user => {
-        User.refreshToken(user).then(resolve, reject)
+        if (user.token) resolve(user);
+        else User.refreshToken(user).then(resolve, reject);
       }, reject);
     });
+  }
+
+  static logout(id) {
+    return db.update(table, id, {token: null});
   }
 
 }

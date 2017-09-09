@@ -91,9 +91,14 @@ export default {
   },
 
   logout() {
-    this.store.commit('removeUser');
-    this.store.commit('removeToken');
-    this.store.commit('removeTodos');
+    const payload = {};
+    const headers = {'Authorization': this.store.state.token};
+    return this.http.post(endpoints.users.logout, payload, {headers})
+      .then(() => {
+        this.store.commit('removeUser');
+        this.store.commit('removeToken');
+        this.store.commit('removeTodos');
+      });
   },
 
   login(context, credentials, redirect) {
