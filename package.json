@@ -13,6 +13,9 @@
     "type": "git",
     "url": "https://github.com/jabes/ControlTodoDemo"
   },
+  "engines": {
+    "node": "8.4.x"
+  },
   "dependencies": {
     "bcrypt": "1.0.3",
     "boom": "5.2.0",
@@ -70,6 +73,7 @@
     "start-dev": "nf start --procfile ./Procfile_dev",
     "start-db": "rethinkdb --config-file rethinkdb.conf",
     "build": "node build.js && webpack",
+    "lint": "eslint modules src test",
     "test": "mocha --reporter spec",
     "postinstall": "npm run build"
   }
