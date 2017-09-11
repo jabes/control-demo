@@ -157,7 +157,7 @@ class Database {
       .get(key)
       .run(this.conn)
       .error(error => {
-        console.error(`Failed to retrieve record ${key}`);
+        console.error(`Failed to retrieve record: ${key}`);
         console.error(error.message);
         process.exit(1);
       });
@@ -170,7 +170,7 @@ class Database {
       .coerceTo('array')
       .run(this.conn)
       .error(error => {
-        console.error(`Failed to retrieve record ${index}:${key}`);
+        console.error(`Failed to retrieve record: ${index}:${key}`);
         console.error(error.message);
         process.exit(1);
       });
@@ -188,7 +188,7 @@ class Database {
         });
       })
       .error(error => {
-        console.error(`Failed to retrieve record ${key}`);
+        console.error(`Failed to subscribe: ${path}`);
         console.error(error.message);
         process.exit(1);
       });
