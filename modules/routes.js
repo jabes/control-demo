@@ -3,8 +3,8 @@
 const Joi = require('joi');
 const Relish = require('relish');
 const Auth = require('./auth');
-const User = require('./user');
-const Todo = require('./todo');
+const UserClass = require('./user');
+const TodoClass = require('./todo');
 const webpackConfig = require('../webpack.config');
 
 const relish = Relish({
@@ -12,7 +12,12 @@ const relish = Relish({
   messages: {},
 });
 
-module.exports = [
+module.exports = function (database) {
+
+  const User = new UserClass(database);
+  const Todo = new TodoClass(database);
+
+  return [
 
   {
     method: 'GET',
@@ -44,7 +49,7 @@ module.exports = [
     },
     handler: function (request, reply) {
       const token = request.payload.token;
-      const decoded = Auth.verifyToken(token);
+      const decoded = Auth.decodeToken(token);
       if (decoded) {
         User.get(decoded.user.id).then(
           user => reply({
@@ -217,4 +222,5 @@ module.exports = [
     }
   },
 
-];
+  ];
+};

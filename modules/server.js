@@ -76,9 +76,9 @@ class Server {
     });
   }
 
-  route() {
+  route(database) {
     console.log('Defining server routes..');
-    const routes = require('./routes');
+    const routes = require('./routes')(database);
     this.server.route(routes);
   }
 

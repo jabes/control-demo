@@ -2,7 +2,6 @@
 
 const Boom = require('boom');
 const Auth = require('./auth');
-const db = global.database;
 const table = 'users';
 
 const validationError = (key, message) => {
@@ -15,7 +14,11 @@ const validationError = (key, message) => {
 
 class User {
 
-  static safe(user) {
+  constructor(database) {
+    this.db = database;
+  }
+
+  safe(user) {
     return {
       id: user.id,
       username: user.username,
@@ -23,32 +26,30 @@ class User {
     };
   }
 
-  static refreshToken(user) {
+  refreshToken(user) {
     return new Promise((resolve, reject) => {
-      const safe = User.safe(user);
+      const safe = this.safe(user);
       user.token = Auth.generateToken(safe);
-      db.update(table, user.id, user).then(resolve(user), reject);
+      this.db.update(table, user.id, user).then(resolve(user), reject);
     });
   }
 
-  static get(id) {
-    return db.get(table, id);
+  get(id) {
+    return this.db.get(table, id);
   }
 
-  static byUsername(username) {
+  byUsername(username) {
     return new Promise((resolve, reject) => {
-      db
-        .getAll(table, username, 'username')
-        .then(response => {
-          const user = response[0];
-          resolve(user);
-        }, reject);
+      this.db.getAll(table, username, 'username').then(response => {
+        const user = response[0];
+        resolve(user);
+      }, reject);
     });
   }
 
-  static create(username, password, full_name) {
+  create(username, password, full_name) {
     return new Promise((resolve, reject) => {
-      User.byUsername(username).then(user => {
+      this.byUsername(username).then(user => {
         if (user) reject(validationError('username', 'this username is taken'));
         const password_hash = Auth.hashPassword(password);
         const mock = {
@@ -56,19 +57,20 @@ class User {
           password_hash,
           full_name,
         };
-        db.insert(table, mock).then(response => {
-          const key = response.generated_keys[0];
-          db.get(table, key).then(user => {
-            User.refreshToken(user).then(resolve, reject);
+        this.db.insert(table, mock).then(response => {
+          const keys = response.generated_keys || [];
+          const key = keys[0];
+          this.db.get(table, key).then(user => {
+            this.refreshToken(user).then(resolve, reject);
           }, reject);
         }, reject);
       }, reject);
     });
   }
 
-  static verify(username, password) {
+  verify(username, password) {
     return new Promise((resolve, reject) => {
-      User.byUsername(username).then(user => {
+      this.byUsername(username).then(user => {
         if (user) {
           const valid = Auth.verifyPassword(password, user.password_hash);
           if (valid) resolve(user);
@@ -78,17 +80,18 @@ class User {
     });
   }
 
-  static login(username, password) {
+  login(username, password) {
     return new Promise((resolve, reject) => {
-      User.verify(username, password).then(user => {
-        if (user.token) resolve(user);
-        else User.refreshToken(user).then(resolve, reject);
+      this.verify(username, password).then(user => {
+        const valid = Auth.isTokenValid(user.token);
+        if (valid) resolve(user);
+        else this.refreshToken(user).then(resolve, reject);
       }, reject);
     });
   }
 
-  static logout(id) {
-    return db.update(table, id, {token: null});
+  logout(id) {
+    return this.db.update(table, id, {token: null});
   }
 
 }

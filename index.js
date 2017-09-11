@@ -6,9 +6,6 @@ const Database = require('./modules/database');
 const server = new Server();
 const database = new Database(server.server);
 
-global.server = server;
-global.database = database;
-
 const tables = [
   {
     name: 'users',
@@ -31,7 +28,7 @@ database
           .then(() => {
             server.connect();
             server.register();
-            server.route();
+            server.route(database);
             server.subscribe(database);
             server.extend();
             server.start();
