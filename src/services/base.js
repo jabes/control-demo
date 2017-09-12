@@ -18,7 +18,9 @@ export default {
 
   socketConnect() {
     return new Promise((resolve, reject) => {
-      const client = new Nes.Client(`ws://${window.location.host}`);
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const path = `${protocol}//${window.location.host}`;
+      const client = new Nes.Client(path);
       const authorization = `Bearer ${this.store.state.token}`;
       const headers = {authorization};
       const auth = {headers};
