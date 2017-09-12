@@ -2,6 +2,7 @@
 !.babelrc
 !.editorconfig
 !.env
+!.env.dev
 !.eslintrc
 !.gitignore
 !.npmrc

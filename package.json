@@ -69,8 +69,8 @@
     "webpack-hot-middleware": "2.19.1"
   },
   "scripts": {
-    "start": "nf start",
-    "start-dev": "nf start --procfile ./Procfile_dev",
+    "start": "nf start --env .env --procfile Procfile",
+    "start-dev": "nf start --env .env.dev --procfile Procfile.dev",
     "start-db": "rethinkdb --config-file rethinkdb.conf --initial-password admin",
     "build": "node build.js && NODE_ENV=production webpack",
     "lint": "eslint modules src test",
