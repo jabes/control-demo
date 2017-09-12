@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# Check the server headers for HTTP2
-# curl --head https://localhost:8000 --cacert keys/certificate.pem
-
 rm -rf keys
 mkdir keys
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048  \
     -subj "/C=CA/ST=BC/L=Vancouver/O=None/OU=None/CN=localhost/emailAddress=None" \
-    -keyout keys/key.pem  -out keys/certificate.pem
+    -keyout keys/key.pem  -out keys/cert.pem

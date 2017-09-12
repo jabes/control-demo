@@ -71,7 +71,7 @@
   "scripts": {
     "start": "nf start",
     "start-dev": "nf start --procfile ./Procfile_dev",
-    "start-db": "rethinkdb --config-file rethinkdb.conf",
+    "start-db": "rethinkdb --config-file rethinkdb.conf --initial-password admin",
     "build": "node build.js && NODE_ENV=production webpack",
     "lint": "eslint modules src test",
     "test": "mocha --reporter spec"

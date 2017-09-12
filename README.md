@@ -33,10 +33,11 @@ npm run build
 To run the database locally, first install RethinkDB on your machine, and run:
 
 ```bash
-rethinkdb --config-file rethinkdb.conf
+npm run start-db
 ```
 
-To run the database on a cloud service such as [compose.io](https://app.compose.io/), make sure all "`RETHINK_*`" environment variables are defined.
+To run the database on a cloud service such as [compose.io](https://app.compose.io/),
+make sure all "`RETHINK_*`" environment variables are defined.
 
 Example:
 
@@ -47,6 +48,12 @@ RETHINK_DB=control_demo
 RETHINK_SSL_CERT={BASE64_ENCODED_SSL_CERTIFICATE}
 RETHINK_USER=admin
 RETHINK_PASSWORD={DEPLOYMENT_PASSWORD}
+```
+
+If using SSL, `RETHINK_SSL_CERT` must be a base64 encoded string, which you can obtain with the following command:
+
+```bash
+base64 --wrap 0 keys/cert.pem
 ```
 
 Once the database is running, you can start the web server:
@@ -72,7 +79,7 @@ HTTP/2 and SSL encryption are both disabled by default. To enable them, complete
 You can check the response headers for `HTTP/2` using cURL:
 
 ```bash
-curl -Ik https://localhost:8000/
+curl --head https://localhost:8000/ --cacert keys/cert.pem
 ```
 
 ### Testing

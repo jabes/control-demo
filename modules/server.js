@@ -17,7 +17,7 @@ module.exports = function (config = {}) {
     config.autoListen = true;
     config.listener = spdy.createServer({
       key: fs.readFileSync('./keys/key.pem'),
-      cert: fs.readFileSync('./keys/certificate.pem'),
+      cert: fs.readFileSync('./keys/cert.pem'),
       spdy: {
         protocols: ['h2'],
         plain: false,
