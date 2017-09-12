@@ -1,6 +1,6 @@
-# Control Todo Demo
+# Control Demo
 
-This is a simple todo app built with Node, Vue, and RethinkDB.
+This is a simple real time todo app built with Node, Vue, and RethinkDB.
 
 ### WebSockets
 

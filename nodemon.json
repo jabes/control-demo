@@ -9,16 +9,7 @@
   "watch": [
     "index.js",
     "webpack.config.js",
-    "modules/"
-  ],
-
-  "ignore": [
-    ".git",
-    "node_modules/",
-    "rethinkdb_data/",
-    "src/",
-    "public/",
-    "test/"
+    "modules/**/*"
   ]
 
 }

@@ -1,6 +1,6 @@
 {
-  "name": "control-todo-demo",
-  "description": "This is a simple todo app built with Node, Vue, and RethinkDB.",
+  "name": "control-demo",
+  "description": "This is a simple real time todo app built with Node, Vue, and RethinkDB.",
   "author": {
     "name": "Justin Bull",
     "email": "bull.justin@gmail.com",
@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jabes/ControlTodoDemo"
+    "url": "https://github.com/jabes/control-demo"
   },
   "engines": {
     "node": "8.4.x"
