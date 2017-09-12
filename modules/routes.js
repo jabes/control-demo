@@ -3,8 +3,6 @@
 const Joi = require('joi');
 const Relish = require('relish');
 const Auth = require('./auth');
-const UserClass = require('./user');
-const TodoClass = require('./todo');
 const webpackConfig = require('../webpack.config');
 
 const relish = Relish({
@@ -14,8 +12,8 @@ const relish = Relish({
 
 module.exports = function (database) {
 
-  const User = new UserClass(database);
-  const Todo = new TodoClass(database);
+  const User = require('./user')(database);
+  const Todo = require('./todo')(database);
 
   return [
 

@@ -3,8 +3,8 @@
 const Server = require('./modules/server');
 const Database = require('./modules/database');
 
-const server = new Server();
-const database = new Database(server.server);
+const server = Server();
+const database = Database(server.server);
 
 const tables = [
   {

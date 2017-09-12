@@ -2,7 +2,9 @@
 
 This is a simple todo app built with Node, Vue, and RethinkDB.
 
-It uses `WebSockets` to push real time updates to the browser.
+### WebSockets
+The [nes](https://github.com/hapijs/nes) plugin is used to push real time updates to the browser.
+Reminders and user sessions are synced with the use of [subscriptions](https://github.com/hapijs/nes/blob/master/API.md#serversubscriptionpath-options) to listen for events, and [publish](https://github.com/hapijs/nes/blob/master/API.md#serverpublishpath-message-options) to emit events.
 
 ### Requirements
 
