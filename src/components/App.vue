@@ -18,6 +18,7 @@
     $color-bg = $colors['blue']
     color $color-text
     background $color-bg
+    font-family sans-serif
 
   .background
     background image-url('background.svg') no-repeat center center
