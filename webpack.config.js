@@ -41,6 +41,10 @@ if (process.env.NODE_ENV === 'development') {
   const HotModuleReplacementPlugin = new webpack.HotModuleReplacementPlugin();
   config.plugins.push(HotModuleReplacementPlugin);
   config.entry.push('webpack-hot-middleware/client');
+} else if (process.env.NODE_ENV === 'production') {
+  const options = {compress: {warnings: false}};
+  const UglifyJsPlugin = new webpack.optimize.UglifyJsPlugin(options);
+  config.plugins.push(UglifyJsPlugin);
 }
 
 module.exports = config;

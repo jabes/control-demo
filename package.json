@@ -27,7 +27,6 @@
     "jsonwebtoken": "8.0.0",
     "jwt-decode": "2.2.0",
     "nes": "6.4.3",
-    "nodemon": "1.12.0",
     "relish": "0.2.4",
     "rethinkdb": "2.3.3",
     "spdy": "3.4.7"
@@ -51,6 +50,7 @@
     "file-loader": "0.11.2",
     "json-loader": "0.5.7",
     "mocha": "3.5.3",
+    "nodemon": "1.12.0",
     "normalize.css": "7.0.0",
     "postcss-loader": "2.0.6",
     "style-loader": "0.18.2",
@@ -72,9 +72,8 @@
     "start": "nf start",
     "start-dev": "nf start --procfile ./Procfile_dev",
     "start-db": "rethinkdb --config-file rethinkdb.conf",
-    "build": "node build.js && webpack",
+    "build": "node build.js && NODE_ENV=production webpack",
     "lint": "eslint modules src test",
-    "test": "mocha --reporter spec",
-    "postinstall": "npm run build"
+    "test": "mocha --reporter spec"
   }
 }

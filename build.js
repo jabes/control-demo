@@ -19,13 +19,13 @@ const configuration = {
   html: "index.html",
   pipeHTML: true,
   icons: {
-    android: true, // Create Android homescreen icon.
-    appleIcon: true, // Create Apple touch icons.
-    appleStartup: true, // Create Apple startup images.
+    android: false, // Create Android homescreen icon.
+    appleIcon: false, // Create Apple touch icons.
+    appleStartup: false, // Create Apple startup images.
     coast: false, // Create Opera Coast icon.
     favicons: true, // Create regular favicons.
-    firefox: true, // Create Firefox OS icons.
-    windows: true, // Create Windows 8 tile icons.
+    firefox: false, // Create Firefox OS icons.
+    windows: false, // Create Windows 8 tile icons.
     yandex: false, // Create Yandex browser icon.
   }
 };
